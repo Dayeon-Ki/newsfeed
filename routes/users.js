@@ -4,11 +4,14 @@ const { User } = require('../models');
 const { Op } = require('sequelize');
 const auth = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 // 회원가입
 router.post('/signup', async (req, res) => {
   try {
     const { userId, nickname, password, email, confirmPassword, introduction } = req.body;
+    const encrypted = await bcrypt.hash(password, 10)
+    console.log("encrypted: ",encrypted)
     const existingUser = await User.findOne({
       where: {
         [Op.or]: [
@@ -30,7 +33,7 @@ router.post('/signup', async (req, res) => {
         return res.status(400).json({ errMessage: "비밀번호를 확인하여 주십시오." })
       }
 
-      const result = await User.create({ userId, nickname, email, password, introduction })
+      const result = await User.create({ userId, nickname, email, password:encrypted, introduction })
       res.status(201).json({
         message: "회원 가입에 성공하였습니다.",
         data: result
@@ -46,9 +49,10 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { userId, password } = req.body;
   const user = await User.findOne({ where: { userId: userId } })
+  const passwordOk = await bcrypt.compare(password, user.password)
   if (!user) {
     return res.status(400).json({ errMessaage: "가입되지 않은 아이디입니다. 아이디를 확인해주세요." });
-  } else if (password !== user.password) {
+  } else if (!passwordOk) {
     return res.status(400).json({ errMessage: "비밀번호를 확인해 주세요." });
   }
 
