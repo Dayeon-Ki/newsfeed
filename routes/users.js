@@ -64,7 +64,7 @@ router.post("/signup", async (req, res) => {
         email,
         password,
         introduction,
-        randomNumber: randomNumber,
+        randomNumber: randomNumber.toString(),
       });
       res.status(201).json({
         message: "회원 가입에 성공하였습니다.",
@@ -84,9 +84,16 @@ router.post("/mail/:userId", async (req, res) => {
     const user = await User.findOne({
       where: { userId },
     });
-    // 코드가 아까 보낸 랜덤 숫자랑 일치하면 성공적으로 인증되었습니다 띄우기
+    // 코드가 아까 보낸 랜덤 숫자랑 일치하면 인증 상태를 true로 업데이트
     if (code === user.randomNumber) {
+      user.verified = true;
+      await user.save();
+
       return res.json({ message: "메일 인증 완료" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "유효하지 않은 인증 코드입니다." });
     }
   } catch (err) {
     console.log(err.message);
@@ -94,7 +101,7 @@ router.post("/mail/:userId", async (req, res) => {
 });
 
 // 로그인
-router.post("/login", async (req, res) => {
+router.post("/login", auth, async (req, res) => {
   const { userId, password } = req.body;
   const user = await User.findOne({ where: { userId: userId } });
   if (!user) {
