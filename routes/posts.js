@@ -5,6 +5,9 @@ const auth = require('../middlewares/auth');
 
 const { User, Post, Comment } = require('../models');
 
+router.use('/:postId/comments', commentsRouter)
+
+
 // 전체 게시글 조회
 router.get('/', async (req, res) => {
   const posts = await Post.findAll({
@@ -19,13 +22,14 @@ router.get('/', async (req, res) => {
   if (posts.length !== 0) {
     const results = posts.map((post) => {
       return {
-        "글쓴이": post.user.nickname,
-        "제목": post.title,
-        "작성일시": post.createdAt,
-        "댓글": post.comments
+        "writer": post.user.nickname,
+        "title": post.title,
+        "content": post.content,
+        "createdAt": post.createdAt,
+        "comments": post.comments
       };
     });
-    res.status(200).json({ feeds: results })
+    res.status(200).json({results })
   } else {
     res.json({ message: "피드가 존재하지 않습니다." })
   }
@@ -93,6 +97,9 @@ router.delete('/:postId', auth, async (req, res) => {
   }
 
 })
+
+
+
 
 
 module.exports = router; 
