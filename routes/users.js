@@ -11,32 +11,28 @@ router.post('/signup', async (req, res) => {
   try {
     const { userId, nickname, password, email, confirmPassword, introduction } = req.body;
     const encrypted = await bcrypt.hash(password, 10)
-    console.log("encrypted: ",encrypted)
+    console.log("encrypted: ", encrypted)
     const existingUser = await User.findOne({
       where: {
         [Op.or]: [
+          { userId: userId },
           { nickname: nickname },
           { email: email }
         ]
       }
     })
     if (existingUser) {
-      if (nickname === existingUser.nickname) {
-        res.status(400).json({ errMessage: "이미 존재하는 닉네임입니다." });
-        return;
-      } else if (email === existingUser.email) {
-        res.status(400).json({ errMessage: "이미 존재하는 이메일입니다." });
-        return;
-      }
+      if (userId === existingUser.userId) return res.status(400).json({ errMessage: "이미 존재하는 아이디입니다." })
+      if (nickname === existingUser.nickname) return res.status(400).json({ errMessage: "이미 존재하는 닉네임입니다." });
+      if (email === existingUser.email) return res.status(400).json({ errMessage: "이미 존재하는 이메일입니다." });
     } else {
       if (password !== confirmPassword) {
         return res.status(400).json({ errMessage: "비밀번호를 확인하여 주십시오." })
       }
 
-      const result = await User.create({ userId, nickname, email, password:encrypted, introduction })
+      const result = await User.create({ userId, nickname, email, password: encrypted, introduction })
       res.status(201).json({
-        message: "회원 가입에 성공하였습니다.",
-        data: result
+        message: "회원 가입에 성공하였습니다."
       })
     }
   } catch (err) {
