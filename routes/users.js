@@ -86,7 +86,7 @@ router.post("/mail/:userId", async (req, res) => {
     });
     // 코드가 아까 보낸 랜덤 숫자랑 일치하면 인증 상태를 true로 업데이트
     if (code === user.randomNumber) {
-      user.verified = true;
+      user.emailConfirm = true;
       await user.save();
 
       return res.json({ message: "메일 인증 완료" });
