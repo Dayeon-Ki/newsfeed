@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <header>
+    <div>
+      <img
+        src="https://occ-0-993-32.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABQ6bOdqSuiv8DdiAz94CUdDgXIFPClIbYgWWRQKZxKr4YkBa9xrfuqmITiZ1lV_zyM8Yd6MBJarL_5QXhZIWdVIsejUG5bDyMM3jz_xgmwDA.png?r=45b" />
+      <form id="login">
+        아이디<input class="userId" type="text" name="userId" placeholder="아이디" />
+        비밀번호<input class="password" type="password" name="password" placeholder="비밀번호" />
+        <input type="submit" />
+      </form>
+    </div>
+  </header>
+  <main>
+    메인
+    <section class="feed-form">
+      <div class="feed">
+        <div class="feed-writer">작성자</div>
+        <div class="feed-title">제목</div>
+        <div class="feed-content">피드 내용입니다.</div>
+      </div>
+      <div class="feed">
+        <div class="feed-writer">작성자</div>
+        <div class="feed-content">피드 내용입니다.</div>
+      </div>
+      <div class="feed">
+        <div class="feed-writer">작성자</div>
+        <div class="feed-content">피드 내용입니다.</div>
+      </div>
+    </section>
+  </main>
+  <footer>푸터</footer>
+</body>
+
+<script>
+  const showFeeds = () => {
+    fetch("/api/posts")
+      .then((res) => res.json())
+      .then((data) => {
+        const feedList = document.querySelector(".feed-form");
+        let feedData = data.results;
+        let temp_html = feedData.map((result) => {
+          let writer = result.writer;
+          let title = result.title;
+          let content = result.content;
+          let comments = result.comments.length;
+          return `<div class="feed">
+                  <div class="feed-writer">${writer}</div>
+                  <div class="feed-title">${title}</div>
+                  <div class="feed-content">${content}</div>
+                  <div class="feed-comment">댓글 ${comments}개</div>
+                  </div>`;
+        });
+        feedList.innerHTML = temp_html.join("");
+      });
+  };
+  showFeeds();
+
+  login.onsubmit = async (e) => {
+    e.preventDefault();
+    let form = new FormData();
+    const userId = document.querySelector(".userId").value;
+    const password = document.querySelector(".password").value;
+    form.append("userId", userId);
+    form.append("password", password);
+    let object = {};
+    form.forEach((value, key) => (object[key] = value));
+    let json = JSON.stringify(object);
+
+    fetch("/api/users/login", {
+      method: "POST", headers: {
+        'Content-Type': 'application/json'
+      }, body: json
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
+    location.reload();
+
+  };
+</script>
+
+</html>
