@@ -77,25 +77,25 @@ router.get('/:userId', async (req, res) => {
 router.put('/:userId', auth, async (req, res) => {
   const userId = req.params.userId;
   const { nickname, password, confirmPassword, email, introduction } = req.body;
+  const encrypted = await bcrypt.hash(password, 10)
   const user = await User.findOne({ where: { userId: userId } });
-  const existingUser = await User.findOne({
-    where:
-      { [Op.or]: [{ nickname: nickname }, { email: email }] }
-  });
-  if (!user) return res.status(400).json({ errMessage: "존재하지 않는 사용자입니다." });
-  if (nickname === existingUser.nickname) return res.status(409).json({ errMessage: "이미 존재하는 닉네임입니다." })
-  if (email === existingUser.email) return res.status(409).json({ errMessage: "이미 존재하는 이메일입니다." });
-  if (password !== confirmPassword) return res.status(400).json({ errMessage: "비밀번호를 확인해 주십시요" });
-  if (!email) return res.status(400).json({ errMessage: "이메일을 입력해 주세요" });
-  await User.update({ nickname: nickname, password: password, email: email, introduction: introduction }, {
-    where: {
-      userId: userId
-    }
-  })
-  res.status(201).json({ Message: "회원정보가 수정되었습니다." });
-})
 
-//
+  if (!user) { return res.status(400).json({ errMessage: "존재하지 않는 사용자입니다." }); }
+  else {
+    if (nickname === user.nickname) return res.status(409).json({ errMessage: "이미 존재하는 닉네임입니다." })
+    if (email === user.email) return res.status(409).json({ errMessage: "이미 존재하는 이메일입니다." });
+    if (password !== confirmPassword) return res.status(400).json({ errMessage: "비밀번호를 확인해 주십시요" });
+    if (!email) return res.status(400).json({ errMessage: "이메일을 입력해 주세요" });
+    await User.update({ nickname: nickname, password: encrypted, email: email, introduction: introduction }, {
+      where: {
+        userId: userId
+      }
+    })
+    res.status(201).json({ Message: "회원정보가 수정되었습니다." });
+  }
+
+
+})
 
 
 module.exports = router;
