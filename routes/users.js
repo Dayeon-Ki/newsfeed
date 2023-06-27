@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require('../models');
+const { User, Follow } = require('../models');
 const { Op } = require('sequelize');
 const auth = require('../middlewares/auth');
 const jwt = require('jsonwebtoken');
@@ -45,11 +45,14 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { userId, password } = req.body;
   const user = await User.findOne({ where: { userId: userId } })
-  const passwordOk = await bcrypt.compare(password, user.password)
   if (!user) {
     return res.status(400).json({ errMessaage: "가입되지 않은 아이디입니다. 아이디를 확인해주세요." });
-  } else if (!passwordOk) {
-    return res.status(400).json({ errMessage: "비밀번호를 확인해 주세요." });
+  }
+  if (user) {
+    const passwordOk = await bcrypt.compare(password, user.password)
+    if (!passwordOk) {
+      return res.status(400).json({ errMessage: "비밀번호를 확인해 주세요." });
+    }
   }
 
   const token = jwt.sign({
@@ -62,15 +65,13 @@ router.post('/login', async (req, res) => {
 // 회원정보 조회
 router.get('/:userId', async (req, res) => {
   const userId = req.params.userId;
-  const user = await User.findOne({ where: { userId: userId } })
-  if (!user) {
-    return req.status(400).json({ errMessage: "존재하지 않는 사용자입니다." });
-  }
-  res.status(200).json({
-    "userId": user.userId,
-    "nickname": user.nickname,
-    "introduction": user.introduction
+  const user = await User.findOne({
+    where: { userId: userId },
+    include: [{ model: Follow, as: "followers", attributes: ["followerId"] }],
+    attributes: ["userId", "nickname", "introduction"]
   })
+  if (!user) return res.status(400).json({ errMessage: "존재하지 않는 사용자입니다." });
+  res.status(200).json({ user })
 })
 
 // 회원정보 수정
@@ -93,9 +94,27 @@ router.put('/:userId', auth, async (req, res) => {
     })
     res.status(201).json({ Message: "회원정보가 수정되었습니다." });
   }
-
-
 })
+
+// 유저 팔로우 / 취소
+router.get('/:userId/follow', auth, async (req, res) => {
+  const followeeId = req.params.userId;
+  console.log('followeeId:', followeeId)
+  const followerId = res.locals.user.userId;
+  console.log('followerId: ', followerId)
+  const existingFollower = await Follow.findOne({
+    where: { [Op.and]: [{ followeeId }, { followerId }] }
+  });
+  console.log(existingFollower);
+  if (existingFollower) {
+    Follow.destroy({ where: { [Op.and]: [{ followeeId }, { followerId }] } });
+    res.status(201).json({ message: "팔로우가 취소되었습니다." });
+  } else {
+    Follow.create({ followeeId, followerId });
+    res.status(201).json({ message: "해당 유저를 팔로우하였습니다." });
+  }
+})
+
 
 
 module.exports = router;
