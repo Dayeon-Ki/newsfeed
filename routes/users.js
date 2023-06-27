@@ -103,7 +103,7 @@ router.post("/mail/:userId", async (req, res) => {
 });
 
 // 로그인
-router.post("/login", auth, async (req, res) => {
+router.post("/login", async (req, res) => {
   const { userId, password } = req.body;
   const user = await User.findOne({ where: { userId: userId } });
   if (!user) {
@@ -112,6 +112,8 @@ router.post("/login", auth, async (req, res) => {
     });
   } else if (password !== user.password) {
     return res.status(400).json({ errMessage: "비밀번호를 확인해 주세요." });
+  } else if (!user.emailConfirm) {
+    return res.status(401).json({ message: "이메일 인증이 필요합니다." });
   }
 
   const token = jwt.sign(

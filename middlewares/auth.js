@@ -10,6 +10,8 @@ module.exports = async (req, res, next) => {
     });
   }
   try {
+    console.log(Authorization);
+
     const decodedToken = jwt.verify(token, "customized-secret-key");
     const userId = decodedToken.userId;
 
@@ -20,10 +22,7 @@ module.exports = async (req, res, next) => {
         .status(401)
         .json({ message: "토큰에 해당하는 사용자가 존재하지 않습니다." });
     }
-
-    if (!user.emailConfirm) {
-      return res.status(401).json({ message: "이메일 인증이 필요합니다." });
-    }
+    // console.log(user);
 
     res.locals.user = user;
     next();

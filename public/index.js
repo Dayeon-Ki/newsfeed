@@ -64,3 +64,38 @@ document
       // 에러 처리 로직 수행
     }
   });
+
+// 로그인 버튼 클릭 시 로그인 처리
+document
+  .getElementById("loginSubmit")
+  .addEventListener("click", async function () {
+    const userId = document.getElementById("lgUserId").value;
+    const password = document.getElementById("lgPassword").value;
+
+    try {
+      const response = await fetch("/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        // 로그인 성공
+        console.log(data.message);
+        // 로그인 후 필요한 동작 수행
+      } else {
+        // 로그인 실패
+        console.log(data.errMessage);
+        // 실패 처리 로직 수행
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // 에러 처리 로직 수행
+    }
+  });
