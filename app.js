@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const indexRouter = require("./routes");
+app.use(express.static("public"));
 
 app.use(express.json());
 app.use(cookieParser());

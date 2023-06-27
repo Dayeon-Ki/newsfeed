@@ -19,6 +19,8 @@ router.post("/signup", async (req, res) => {
     if (existingUser) {
       if (nickname === existingUser.nickname) {
         res.status(400).json({ errMessage: "이미 존재하는 닉네임입니다." });
+        console.log(nickname, existingUser);
+
         return;
       } else if (email === existingUser.email) {
         res.status(400).json({ errMessage: "이미 존재하는 이메일입니다." });
