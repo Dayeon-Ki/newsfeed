@@ -108,3 +108,28 @@ document
       // 에러 처리 로직 수행
     }
   });
+
+// 피드 불러오기
+window.addEventListener("DOMContentLoaded", async function () {
+  fetch("/api/posts", {})
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      let rows = data["feeds"];
+      const cardBox = document.getElementById("cards-box");
+      rows.forEach((post) => {
+        let nickname = post["글쓴이"];
+        let title = post["제목"];
+
+        let temp_html = `<div class="solo-card">
+                          <div class="card w-75">
+                            <div class="card-body">
+                              <h5 class="card-title">제목: ${title}</h5>
+                              <p class="card-text">작성자: ${nickname}</p>
+                            </div>
+                          </div>
+                        </div>`;
+        cardBox.insertAdjacentHTML("beforeend", temp_html);
+      });
+    });
+});

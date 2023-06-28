@@ -29,4 +29,14 @@ body {
   display: flex;
   gap: 10px;
   justify-content: end;
+  margin-right: 20px;
+}
+
+.mycards {
+  margin-top: 30px;
+  margin-left: 20%;
+}
+
+.solo-card {
+  margin-bottom: 30px;
 }
