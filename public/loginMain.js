@@ -9,8 +9,9 @@ window.addEventListener('DOMContentLoaded', async function () {
       rows.forEach(post => {
         let nickname = post['content'];
         let title = post['title'];
+        let postId = post['postId'];
 
-        let temp_html = `<div class="solo-card">
+        let temp_html = `<div class="solo-card" onclick="goToPostDetail(${postId})">
                           <div class="card w-75">
                             <div class="card-body">
                               <h5 class="card-title">제목: ${title}</h5>
@@ -29,3 +30,8 @@ document.getElementById('postPgBtn').addEventListener('click', function () {
     window.location.href = 'post.html';
   }
 });
+
+// 게시글 상세 정보 페이지로 이동
+function goToPostDetail(postId) {
+  window.location.href = 'postDetail.html?id=' + postId;
+}

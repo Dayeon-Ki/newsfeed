@@ -20,14 +20,17 @@ router.get('/', async (req, res) => {
       },
       { model: User, as: 'user', attributes: ['nickname'] },
     ],
-    attributes: ['UserId', 'title', 'content', 'createdAt'],
+    attributes: ['postId', 'UserId', 'title', 'content', 'createdAt'],
     order: [['createdAt', 'DESC']],
   });
   console.log(posts);
 
   if (posts.length !== 0) {
     const results = posts.map(post => {
+      console.log(post);
+
       return {
+        postId: post.postId,
         writer: post.user.nickname,
         title: post.title,
         content: post.content,
@@ -35,6 +38,8 @@ router.get('/', async (req, res) => {
         comments: post.comments,
       };
     });
+    console.log(results);
+
     res.status(200).json({ results });
   } else {
     res.json({ message: '피드가 존재하지 않습니다.' });
