@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
     });
   }
   try {
-    console.log(Authorization);
+    // console.log(Authorization);
 
     const decodedToken = jwt.verify(token, "customized-secret-key");
     const userId = decodedToken.userId;
