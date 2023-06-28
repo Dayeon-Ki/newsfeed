@@ -126,6 +126,12 @@ router.post("/login", async (req, res) => {
   return res.json({ message: "로그인 완료" });
 });
 
+// 쿠키받아와서 미들웨어에 디코딩, user정보 넘겨주기
+router.get("/currentUser", auth, async (req, res) => {
+  res.json(res.locals.user);
+  // console.log(res.locals.user);
+});
+
 // 회원정보 조회
 router.get("/:userId", async (req, res) => {
   const userId = req.params.userId;
