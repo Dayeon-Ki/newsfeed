@@ -1,98 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <header>
-      <div>
-        <img
-          src="https://occ-0-993-32.1.nflxso.net/dnm/api/v6/LmEnxtiAuzezXBjYXPuDgfZ4zZQ/AAAABQ6bOdqSuiv8DdiAz94CUdDgXIFPClIbYgWWRQKZxKr4YkBa9xrfuqmITiZ1lV_zyM8Yd6MBJarL_5QXhZIWdVIsejUG5bDyMM3jz_xgmwDA.png?r=45b"
-        />
-        <form id="login">
-          아이디<input
-            class="userId"
-            type="text"
-            name="userId"
-            placeholder="아이디"
-          />
-          비밀번호<input
-            class="password"
-            type="password"
-            name="password"
-            placeholder="비밀번호"
-          />
-          <input type="submit" />
-        </form>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css" />
+  <title>Document</title>
+  <!-- 부트스트랩 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <!-- 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <h1 class="header">뉴스피드 프로젝트</h1>
+  </header>
+  <div class="headerBtnGr">
+    <button id="loginBtn" type="button" class="btn btn-outline-primary">로그인</button>
+    <button id="signupBtn" type="button" class="btn btn-outline-primary">회원가입</button>
+  </div>
+  <main>
+    <div id="loginModal" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">로그인</h5>
+            <button type="button" class="btn-close" onclick="closeModal('loginModal')"></button>
+          </div>
+          <div class="modal-body">
+            <input id="lgUserId" type="text" placeholder="userId">
+            <input id="lgPassword" type="password" placeholder="비밀번호">
+            <button id="loginSubmit" type="button">로그인</button>
+          </div>
+        </div>
       </div>
-    </header>
-    <main>
-      메인
-      <section class="feed-form" >
-        <div class="feed">
-          <div class="feed-writer">작성자</div>
-          <div class="feed-title">제목</div>
-          <div class="feed-content">피드 내용입니다.</div>
-        </div>
-        <div class="feed">
-          <div class="feed-writer">작성자</div>
-          <div class="feed-content">피드 내용입니다.</div>
-        </div>
-        <div class="feed">
-          <div class="feed-writer">작성자</div>
-          <div class="feed-content">피드 내용입니다.</div>
-        </div>
-      </section>
-    </main>
-    <footer>푸터</footer>
-  </body>
+    </div>
 
-  <script>
-    const showFeeds = () => {
-      fetch("/api/posts")
-        .then((res) => res.json())
-        .then((data) => {
-          const feedList = document.querySelector(".feed-form");
-          let feedData = data.results;
-          let temp_html = feedData.map((result) => {
-            let writer = result.writer;
-            let title = result.title;
-            let content = result.content;
-            let comments = result.comments.length;
-            return `<div class="feed">
-                  <div class="feed-writer">${writer}</div>
-                  <div class="feed-title">${title}</div>
-                  <div class="feed-content">${content}</div>
-                  <div class="feed-comment">댓글 ${comments}개</div>
-                  </div>`;
-          });
-          feedList.innerHTML = temp_html.join("");
-        });
-    };
-    showFeeds();
+    <div id="signupModal" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">회원가입</h5>
+            <button type="button" class="btn-close" onclick="closeModal('signupModal')"></button>
+          </div>
+          <div class="modal-body">
+            <input id="userId" type="text" placeholder="userId">
+            <input id="nickname" type="text" placeholder="닉네임">
+            <input id="email" type="text" placeholder="이메일">
+            <input id="introduction" type="text" placeholder="자기소개">
+            <input id="password" type="text" placeholder="비밀번호">
+            <input id="confirmPassword" type="password" placeholder="비밀번호 확인">
+            <button id="signupSubmit" type="button">회원가입</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    login.onsubmit = async (e) => {
-      e.preventDefault();
-      let form = new FormData();
-      const userId = document.querySelector(".userId").value;
-      const password = document.querySelector(".password").value;
-      form.append("userId", userId);
-      form.append("password", password);
-      let object = {};
-      form.forEach((value, key) => (object[key] = value));
-      let json = JSON.stringify(object);
-      
-      fetch("/api/users/login", { method: "POST", headers: {
-      'Content-Type': 'application/json'}, body: json })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-        });
-      location.reload();
-    
-    };
-  </script>
-</html>
+  <!-- 카드 -->
+  <div class=" mycards">
+    <div class="row" id="cards-box">
+    </div>
+  </div>
+
+
+</body>
+
+<!-- 자바스크립트 -->
+<script src="index.js"></script>
+<script>
+  // user.html 파일 로드
+  function loadUserPage() {
+    window.location.href = "user.html";
+  }
+</script>
+
+
