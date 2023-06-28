@@ -5,8 +5,10 @@ const commentsRouter = require('./comments');
 
 const router = express.Router();
 
-router.use('/posts', postsRouter);
 router.use('/users', usersRouter);
-router.use('/posts/', commentsRouter);
+router.use('/posts', postsRouter);
+
+
+
 
 module.exports = router;
