@@ -128,3 +128,10 @@ window.addEventListener("DOMContentLoaded", async function () {
       });
     });
 });
+
+// 게시글 작성 클릭 시 게시글 페이지로 이동
+document.getElementById("postPgBtn").addEventListener("click", function () {
+  if (confirm("게시글 작성 페이지로 이동하시겠습니까?")) {
+    window.location.href = "post.html";
+  }
+});
