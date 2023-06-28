@@ -3,7 +3,13 @@ const router = express.Router();
 const commentsRouter = require("./comments");
 const auth = require("../middlewares/auth");
 
-const { User, Post, Comment } = require("../models");
+
+const { User, Post, Comment, Like } = require('../models');
+const { Op } = require('sequelize');
+
+router.use('/:postId/comments', commentsRouter)
+
+
 
 // 전체 게시글 조회
 router.get("/", async (req, res) => {
@@ -23,13 +29,14 @@ router.get("/", async (req, res) => {
   if (posts.length !== 0) {
     const results = posts.map((post) => {
       return {
-        글쓴이: post.user.nickname,
-        제목: post.title,
-        작성일시: post.createdAt,
-        댓글: post.comments,
+        "writer": post.user.nickname,
+        "title": post.title,
+        "content": post.content,
+        "createdAt": post.createdAt,
+        "comments": post.comments
       };
     });
-    res.status(200).json({ feeds: results });
+    res.status(200).json({ results })
   } else {
     res.json({ message: "피드가 존재하지 않습니다." });
   }
@@ -50,17 +57,16 @@ router.get("/:postId", auth, async (req, res) => {
   const postId = req.params.postId;
   const post = await Post.findOne({
     where: { postId: postId },
-    include: [
-      { model: Comment, as: "comments", attributes: ["UserId", "content"] },
-    ],
-    attributes: ["UserId", "title", "content", "createdAt"],
-  });
-  res.status(200).json({ post });
-});
+    include: [{ model: Comment, as: "comments", attributes: ["UserId", "content"] }, { model: Like, as: "likes", attributes: ["userId"] }],
+    attributes: ["UserId", "title", "content", "createdAt"]
+  })
+  if (!post) return res.status(400).json({ errMessage: "존재하지 않는 게시글입니다." })
+  res.status(200).json({ post })
+})
 
 // 게시글 수정
+router.put('/:postId', auth, async (req, res) => {
 
-router.put("/:postId", auth, async (req, res) => {
   const { postId } = req.params;
   const { title, content } = req.body;
   const { userId } = res.locals.user;
@@ -106,4 +112,26 @@ router.delete("/:postId", auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+
+})
+
+// 게시글 좋아요 / 취소
+router.get('/:postId/like', auth, async (req, res) => {
+  const { postId } = req.params;
+  const { userId } = res.locals.user;
+  const like = await Like.findOne({
+    where: { [Op.and]: [{ postId }, { userId }] }
+  });
+  if (like) {
+    Like.destroy({ where: { [Op.and]: [{ postId }, { userId }] } })
+    res.status(201).json({ message: "해당 게시글의 좋아요를 취소하셨습니다." })
+  } else {
+    Like.create({ userId: userId, postId: postId });
+    res.status(201).json({ message: "해당 게시글을 좋아요 하셨습니다." })
+  }
+})
+
+
+
+module.exports = router; 
+
