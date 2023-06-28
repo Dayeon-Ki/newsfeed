@@ -32,7 +32,12 @@ document
     const confirmPassword = document.getElementById("confirmPassword").value;
 
     try {
-      console.log(document.getElementById("userId").value);
+      console.log(userId)
+      console.log(nickname)
+      console.log(email);
+      console.log(introduction);
+      console.log(password);
+      console.log(confirmPassword);
 
       const response = await fetch("/api/users/signup", {
         method: "POST",
