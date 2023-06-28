@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../models");
+const { User, Follow } = require("../models");
 const { Op } = require("sequelize");
 const auth = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
@@ -20,19 +20,16 @@ router.post("/signup", async (req, res) => {
       },
     });
     if (existingUser) {
-      if (userId === existingUser.userId) return res.status(400).json({ errMessage: "이미 존재하는 아이디입니다." })
-      if (nickname === existingUser.nickname) return res.status(400).json({ errMessage: "이미 존재하는 닉네임입니다." });
-      if (email === existingUser.email) return res.status(400).json({ errMessage: "이미 존재하는 이메일입니다." });
+      if (userId === existingUser.userId) return res.status(400).json({ message: "이미 존재하는 아이디입니다." })
+      if (nickname === existingUser.nickname) return res.status(400).json({ message: "이미 존재하는 닉네임입니다." });
+      if (email === existingUser.email) return res.status(400).json({ message: "이미 존재하는 이메일입니다." });
     } else {
       if (password !== confirmPassword) {
         return res
           .status(400)
-          .json({ errMessage: "비밀번호를 확인하여 주십시오." });
+          .json({ message: "비밀번호를 확인하여 주십시오." });
       }
-      const result = await User.create({ userId, nickname, email, password: encrypted, introduction })
-      res.status(201).json({
-        message: "회원 가입에 성공하였습니다."
-      })
+
       // 랜덤한 6자리 숫자 생성
       const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
@@ -108,11 +105,11 @@ router.post("/login", async (req, res) => {
   const user = await User.findOne({ where: { userId: userId } })
   const passwordOk = await bcrypt.compare(password, user.password)
   if (!user) {
-    return res.status(400).json({ errMessaage: "가입되지 않은 아이디입니다. 아이디를 확인해주세요." });
+    return res.status(400).json({ message: "가입되지 않은 아이디입니다. 아이디를 확인해주세요." });
   }
   if (user) {
     const passwordOk = await bcrypt.compare(password, user.password)
-    if (!passwordOk) return res.status(400).json({ errMessage: "비밀번호를 확인해 주세요." });
+    if (!passwordOk) return res.status(400).json({ message: "비밀번호를 확인해 주세요." });
     if (!user.emailConfirm) return res.status(401).json({ message: "이메일 인증이 필요합니다." });
   }
 
@@ -128,8 +125,8 @@ router.post("/login", async (req, res) => {
 
 // 쿠키받아와서 미들웨어에 디코딩, user정보 넘겨주기
 router.get("/currentUser", auth, async (req, res) => {
-  res.json(res.locals.user);
-  // console.log(res.locals.user);
+  const { userId, nickname, email, introduction, createdAt } = res.locals.user;
+  res.json({ userId, nickname, email, introduction, createdAt });
 });
 
 // 회원정보 조회
@@ -140,7 +137,7 @@ router.get("/:userId", async (req, res) => {
     include: [{ model: Follow, as: "followers", attributes: ["followerId"] }],
     attributes: ["userId", "nickname", "introduction"]
   })
-  if (!user) return res.status(400).json({ errMessage: "존재하지 않는 사용자입니다." });
+  if (!user) return res.status(400).json({ message: "존재하지 않는 사용자입니다." });
   res.status(200).json({ user })
 })
 
@@ -149,26 +146,29 @@ router.get("/:userId", async (req, res) => {
 router.put("/:userId", auth, async (req, res) => {
   const userId = req.params.userId;
   const { nickname, password, confirmPassword, email, introduction } = req.body;
+  const user = await User.findOne({ where: { userId: userId } }); // 현재 사용자
   const encrypted = await bcrypt.hash(password, 10)
-  const user = await User.findOne({ where: { userId: userId } });
-
-  const existingUser = await User.findOne({
+  const existingUser = await User.findOne({ // 변경하려는 닉네임, 이메일에 대한 확인
     where: { [Op.or]: [{ nickname: nickname }, { email: email }] },
   });
+
+
   if (!user)
-    return res.status(400).json({ errMessage: "존재하지 않는 사용자입니다." });
-  if (nickname === existingUser.nickname)
-    return res.status(409).json({ errMessage: "이미 존재하는 닉네임입니다." });
-  if (email === existingUser.email)
-    return res.status(409).json({ errMessage: "이미 존재하는 이메일입니다." });
+    return res.status(400).json({ message: "존재하지 않는 사용자입니다." });
+  if (existingUser) {
+    if (nickname === existingUser.nickname)
+      return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
+    if (email === existingUser.email)
+      return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
+  }
   if (password !== confirmPassword)
-    return res.status(400).json({ errMessage: "비밀번호를 확인해 주십시요" });
+    return res.status(400).json({ message: "비밀번호를 확인해 주십시요" });
   if (!email)
-    return res.status(400).json({ errMessage: "이메일을 입력해 주세요" });
+    return res.status(400).json({ message: "이메일을 입력해 주세요" });
   await User.update(
     {
       nickname: nickname,
-      password: password,
+      password: encrypted,
       email: email,
       introduction: introduction,
     },
@@ -177,7 +177,7 @@ router.put("/:userId", auth, async (req, res) => {
         userId: userId
       }
     })
-  res.status(201).json({ Message: "회원정보가 수정되었습니다." });
+  res.status(201).json({ message: "회원정보가 수정되었습니다." });
 }
 );
 
@@ -190,12 +190,12 @@ router.delete("/:userId", auth, async (req, res) => {
   if (!user)
     return res
       .status(400)
-      .json({ errMessage: "잘못된 접근입니다. 존재하지 않는 회원입니다." });
+      .json({ message: "잘못된 접근입니다. 존재하지 않는 회원입니다." });
   if (user) {
     if (userId !== user.userId) {
       return res
         .status(400)
-        .json({ errMessage: "본인만이 삭제할 수 있습니다." });
+        .json({ message: "본인만이 삭제할 수 있습니다." });
     } else {
       await User.destroy({ where: { userId: userId } });
       res

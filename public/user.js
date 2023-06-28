@@ -1,19 +1,25 @@
 window.addEventListener("DOMContentLoaded", function () {
   // 유저 정보(쿠키) 넘겨주기
   fetch("/api/users/currentUser", {
-    headers: { cookie: this.document.cookie },
+    // headers: { cookie: this.document.cookie },
   }) // 유저정보 받아와서 뿌려주기
-    .then((response) => response.json())
+    .then((res) => res.json())
     .then((data) => {
-      // console.log(data);
-      const nicknameField = document.querySelector(".nickname p");
-      nicknameField.textContent = "사용자 이름: " + data.nickname;
-
-      const introductionField = document.querySelector(".introduction p");
-      introductionField.textContent = "한 줄 소개: " + data.introduction;
-
-      const passwordField = document.querySelector(".password p");
-      passwordField.textContent = "비밀번호: " + data.password;
+      userId = data.userId;
+      const idInfo = document.querySelector("#idInfo");
+      idInfo.textContent = 'ID : ' + data.userId;
+      const nicknameInfo = document.querySelector("#nickInfo");
+      nicknameInfo.textContent = '닉네임 : ' + data.nickname;
+      const introductionInfo = document.querySelector("#introInfo");
+      introductionInfo.textContent = '자기소개 : ' + data.introduction;
+      const createdAtInfo = document.querySelector("#createdAtInfo");
+      createdAtInfo.textContent = '가입일 : ' + data.createdAt;
+    })
+    .then(() => {
+      document.getElementById("modifyBtn").addEventListener("click", () => {
+        console.log('웨않눌려?')
+        openModal("modifyModal");
+      });
     })
     .catch((error) => {
       console.error("유저 정보를 가져오는 도중 오류가 발생했습니다:", error);
@@ -24,3 +30,90 @@ window.addEventListener("DOMContentLoaded", function () {
 document.getElementById("MainPgBtn").addEventListener("click", function () {
   window.location.href = "index.html"; // 메인 페이지로 이동
 });
+
+
+// 모달 창 열기
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "block";
+}
+
+// 모달 창 닫기
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
+}
+// 정보수정버튼 클릭 시
+document.getElementById("modifyBtn").addEventListener("click", () => {
+  openModal("modifyModal");
+});
+
+
+// 수정버튼에 click 이벤트 부여
+document.getElementById("modifySubmit").addEventListener("click", modSubmit);
+
+// 수정버튼 클릭 시 실행
+function modSubmit() {
+  const userId = document.getElementById("userId").value;
+  const nickname = document.getElementById("nickname").value;
+  const email = document.getElementById("email").value;
+  const introduction = document.getElementById("introduction").value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  console.log('userId:', userId)
+  try {
+    console.log(userId)
+    console.log(nickname);
+    console.log(introduction);
+    console.log(password);
+    console.log(confirmPassword);
+
+    fetch(`/api/users/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nickname,
+        introduction,
+        email,
+        password,
+        confirmPassword,
+      }),
+    }).then((res) => res.json())
+      .then((data) => {
+        alert(data.message)
+        location.reload()
+      })
+      .catch(console.error)
+
+    // const data = await response.json();
+    // if (response.ok) {
+    //   // 회원가입 성공
+    //   console.log(data.message);
+    //   alert("회원가입 성공!"); // 알림 창 띄우기
+    //   location.reload(); // 페이지 새로고침
+    //   // 회원가입 후 필요한 동작 수행
+    // } else {
+    //   // 회원가입 실패
+    //   console.log(data.message);
+    //   // 실패 처리 로직 수행
+    // }
+  } catch (error) {
+    console.error("Error:", error);
+    // 에러 처리 로직 수행
+  }
+}
+
+console.log('userId:', userId)
+
+
+// 쿠키 삭제
+
+document.getElementById("logoutBtn").addEventListener("click", deleteCookie);
+
+
+function deleteCookie() {
+  document.cookie = Authorization + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+}

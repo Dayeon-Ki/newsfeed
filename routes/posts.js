@@ -11,7 +11,7 @@ router.use('/:postId/comments', commentsRouter)
 
 
 
-// 전체 게시글 조회
+// 전체 게시글 조회 
 router.get("/", async (req, res) => {
   const posts = await Post.findAll({
     include: [
@@ -60,7 +60,7 @@ router.get("/:postId", auth, async (req, res) => {
     include: [{ model: Comment, as: "comments", attributes: ["UserId", "content"] }, { model: Like, as: "likes", attributes: ["userId"] }],
     attributes: ["UserId", "title", "content", "createdAt"]
   })
-  if (!post) return res.status(400).json({ errMessage: "존재하지 않는 게시글입니다." })
+  if (!post) return res.status(400).json({ message: "존재하지 않는 게시글입니다." })
   res.status(200).json({ post })
 })
 
@@ -76,12 +76,12 @@ router.put('/:postId', auth, async (req, res) => {
   if (!post)
     return res
       .status(400)
-      .json({ errMessage: "잘못된 접근입니다. 존재하지 않는 게시글입니다." });
+      .json({ message: "잘못된 접근입니다. 존재하지 않는 게시글입니다." });
   if (post) {
     if (userId !== post.UserId) {
       return res
         .status(400)
-        .json({ errMessage: "작성자만이 게시글을 수정할 수 있습니다." });
+        .json({ message: "작성자만이 게시글을 수정할 수 있습니다." });
     } else {
       await Post.update({ title, content }, { where: { postId: postId } });
       res.status(201).json({ message: "게시글이 정상적으로 수정되었습니다." });
@@ -99,21 +99,18 @@ router.delete("/:postId", auth, async (req, res) => {
   if (!post)
     return res
       .status(400)
-      .json({ errMessage: "잘못된 접근입니다. 존재하지 않는 게시글입니다." });
+      .json({ message: "잘못된 접근입니다. 존재하지 않는 게시글입니다." });
   if (post) {
     if (userId !== post.UserId) {
       return res
         .status(400)
-        .json({ errMessage: "작성자만이 게시글을 삭제할 수 있습니다." });
+        .json({ message: "작성자만이 게시글을 삭제할 수 있습니다." });
     } else {
       await Post.destroy({ where: { postId: postId } });
       res.status(201).json({ message: "게시글이 정상적으로 삭제되었습니다." });
     }
   }
 });
-
-
-})
 
 // 게시글 좋아요 / 취소
 router.get('/:postId/like', auth, async (req, res) => {
@@ -133,5 +130,5 @@ router.get('/:postId/like', auth, async (req, res) => {
 
 
 
-module.exports = router; 
+module.exports = router;
 
