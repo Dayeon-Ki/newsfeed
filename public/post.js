@@ -24,7 +24,7 @@ document.getElementById('postCrBtn').addEventListener('click', async function ()
     if (response.ok) {
       console.log(data.message);
       alert('게시글이 등록되었습니다');
-      window.location.href = 'index.html';
+      window.location.href = 'loginMain.html';
     } else {
       console.log(data.errMessage);
     }
