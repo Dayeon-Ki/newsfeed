@@ -61,7 +61,7 @@ document.getElementById("signupSubmit").addEventListener("click", async function
       // 회원가입 후 필요한 동작 수행
     } else {
       // 회원가입 실패
-      console.log(data.message);
+      console.log(data.errMessage);
       // 실패 처리 로직 수행
     }
   } catch (error) {
@@ -98,7 +98,7 @@ document
         // 로그인 후 필요한 동작 수행
       } else {
         // 로그인 실패
-        console.log(data.message);
+        console.log(data.errMessage);
         // 실패 처리 로직 수행
       }
     } catch (error) {

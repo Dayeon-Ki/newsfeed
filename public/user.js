@@ -1,7 +1,6 @@
 window.addEventListener("DOMContentLoaded", function () {
   // 유저 정보(쿠키) 넘겨주기
   fetch("/api/users/currentUser", {
-    // headers: { cookie: this.document.cookie },
   }) // 유저정보 받아와서 뿌려주기
     .then((res) => res.json())
     .then((data) => {
@@ -17,7 +16,6 @@ window.addEventListener("DOMContentLoaded", function () {
     })
     .then(() => {
       document.getElementById("modifyBtn").addEventListener("click", () => {
-        console.log('웨않눌려?')
         openModal("modifyModal");
       });
     })
@@ -63,12 +61,6 @@ function modSubmit() {
 
   console.log('userId:', userId)
   try {
-    console.log(userId)
-    console.log(nickname);
-    console.log(introduction);
-    console.log(password);
-    console.log(confirmPassword);
-
     fetch(`/api/users/${userId}`, {
       method: "PUT",
       headers: {
@@ -87,19 +79,6 @@ function modSubmit() {
         location.reload()
       })
       .catch(console.error)
-
-    // const data = await response.json();
-    // if (response.ok) {
-    //   // 회원가입 성공
-    //   console.log(data.message);
-    //   alert("회원가입 성공!"); // 알림 창 띄우기
-    //   location.reload(); // 페이지 새로고침
-    //   // 회원가입 후 필요한 동작 수행
-    // } else {
-    //   // 회원가입 실패
-    //   console.log(data.message);
-    //   // 실패 처리 로직 수행
-    // }
   } catch (error) {
     console.error("Error:", error);
     // 에러 처리 로직 수행
@@ -115,5 +94,16 @@ document.getElementById("logoutBtn").addEventListener("click", deleteCookie);
 
 
 function deleteCookie() {
-  document.cookie = Authorization + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+  fetch('/api/users/logout')
+    .then((res) => res.json())
+    .then((data) => {
+      alert(data.message)
+      window.location.href = "index.html"
+    })
+    .catch(console.error)
 }
+
+// 쿠키를 만들어주는것도 서버니까 삭제도 서버에서
+// function deleteCookie() {
+//   document.cookie = 'Authorization + =; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+// }

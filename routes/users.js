@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 
 
+
 // 회원가입
 router.post("/signup", async (req, res) => {
   try {
@@ -123,6 +124,13 @@ router.post("/login", async (req, res) => {
   return res.json({ message: "로그인 완료" });
 });
 
+// 로그아웃
+router.get('/logout', (req, res) => {
+  console.log(res)
+  return res.clearCookie('Authorization').json({ message: "로그아웃 되었습니다." })
+})
+
+
 // 쿠키받아와서 미들웨어에 디코딩, user정보 넘겨주기
 router.get("/currentUser", auth, async (req, res) => {
   const { userId, nickname, email, introduction, createdAt } = res.locals.user;
@@ -223,6 +231,7 @@ router.get('/:userId/follow', auth, async (req, res) => {
     res.status(201).json({ message: "해당 유저를 팔로우하였습니다." });
   }
 })
+
 
 
 module.exports = router;
