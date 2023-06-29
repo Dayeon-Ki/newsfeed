@@ -26,9 +26,10 @@ window.addEventListener('DOMContentLoaded', function () {
       let rows = data.post['comments'];
       const commentBox = document.getElementById('cards-box');
       rows.forEach(comment => {
-        let content = comment['content'];
+        const content = comment['content']; // 댓글테스트
+        const commentId = comment['commentId']; // 1
 
-        let temp_html = `<div class="solo-card" onclick="goToPostDetail(${postId})">
+        const temp_html = `<div class="solo-card" data-commentId="${commentId}">
                           <div class="card w-75">
                             <div class="card-body">
                               <h5 class="card-title">${content}</h5>
@@ -40,6 +41,7 @@ window.addEventListener('DOMContentLoaded', function () {
                               <div id="commentEditBox" style="display: none;">
                                 <div class="modal-body">
                                   <input id="editContent" type="text" placeholder="내용">
+                                  <button id="editCancel" type="button">취소</button>
                                   <button id="editSubmit" type="button">확인</button>
                                 </div>
                               </div>
@@ -146,6 +148,7 @@ document.getElementById('commentCr').addEventListener('click', async function ()
   }
 });
 
+// 댓글 수정 버튼 클릭 시 댓글 수정 창 띄우기
 document.addEventListener('click', function (event) {
   if (event.target.id === 'commentEdit') {
     const commentEditBox = event.target.parentNode.nextElementSibling;
@@ -157,5 +160,37 @@ document.addEventListener('click', function (event) {
     // 인풋 요소에 기존 댓글 내용 설정
     const editContentInput = commentEditBox.querySelector('#editContent');
     editContentInput.value = commentContent;
+  }
+});
+
+// 댓글 수정 창의 취소버튼 클릭 시 창 숨기기
+document.addEventListener('click', function (event) {
+  if (event.target.id === 'editCancel') {
+    const commentEditBox = event.target.closest('#commentEditBox');
+    commentEditBox.style.display = 'none';
+  }
+});
+
+// 댓글 삭제 버튼 클릭 시 댓글 삭제 처리
+document.addEventListener('click', async function (event) {
+  if (event.target.id === 'commentDelete') {
+    const commentId = event.target.closest('.solo-card').dataset.commentid;
+    try {
+      const response = await fetch(`/api/posts/${postId}/comments/${commentId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // 삭제 성공
+        console.log(data.message);
+        alert('댓글이 삭제되었습니다');
+        location.reload();
+      } else {
+        // 삭제 실패
+        console.log('댓글 삭제에 실패했습니다.');
+      }
+    } catch (error) {
+      console.log('오류가 발생했습니다.', error);
+    }
   }
 });
