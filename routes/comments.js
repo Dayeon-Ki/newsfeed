@@ -42,7 +42,7 @@ router.put('/:commentId', auth, async (req, res) => {
 })
 
 // 댓글 삭제
-router.put('/:postId/comments/:commentId', auth, async (req, res) => {
+router.delete('/:commentId', auth, async (req, res) => {
   const commentId = req.params.commentId;
   const { userId } = res.locals.user;
   const comment = await Comment.findOne({ where: { commentId } });
