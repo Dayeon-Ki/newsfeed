@@ -250,3 +250,5 @@ document.getElementById('likeBtn').addEventListener('click', async function () {
     console.error('Error:', error);
   }
 });
+
+// 게시글 작성자 누르면 userInfo 페이지로 가기
