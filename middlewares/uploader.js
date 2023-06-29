@@ -10,7 +10,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
-const allowedExtensions = ['.png', 'jpg', 'jpeg', ',bmp'];
+const allowedExtensions = ['.png', '.jpg', '.jpeg', '.bmp'];
 
 const upload = multer({
   storage: multerS3({
