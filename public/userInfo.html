@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>개인 페이지</title>
+    <!-- 부트스트랩 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <!-- 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet" />
+  </head>
+
+  <body>
+    <header>
+      <h1 class="header">뉴스피드 프로젝트</h1>
+      <h3 class="headerSub">유저 정보 페이지</h3>
+    </header>
+    <div class="headerBtnGr">
+      <button id="logoutBtn" type="button" class="btn btn-outline-primary">로그아웃</button>
+      <button id="listBtn" type="button" class="btn btn-outline-primary">목록</button>
+    </div>
+    <main>
+      <div class="userInfo">
+        <p id="idInfo">ID</p>
+        <p id="nickInfo">닉네임</p>
+        <p id="introInfo">자기소개</p>
+        <p id="followerInfo">팔로워</p>
+        <div class="follow"></div>
+      </div>
+    </main>
+  </body>
+
+  <!-- 자바스크립트 -->
+  <script src="userInfo.js"></script>
+</html>
