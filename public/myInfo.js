@@ -21,6 +21,7 @@ window.addEventListener("DOMContentLoaded", function () {
     })
     .catch((error) => {
       console.error("유저 정보를 가져오는 도중 오류가 발생했습니다:", error);
+
     });
 });
 
@@ -102,3 +103,8 @@ function deleteCookie() {
 // function deleteCookie() {
 //   document.cookie = 'Authorization + =; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
 // }
+
+document.getElementById('MainPgBtn').addEventListener('click', function () {
+  window.location.href = 'loginMain.html'; // 메인 페이지로 이동
+});
+

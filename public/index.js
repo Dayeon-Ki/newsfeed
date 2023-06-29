@@ -1,26 +1,27 @@
 // 모달 창 열기
 function openModal(modalId) {
   const modal = document.getElementById(modalId);
-  modal.style.display = "block";
+  modal.style.display = 'block';
 }
 
 // 모달 창 닫기
 function closeModal(modalId) {
   const modal = document.getElementById(modalId);
-  modal.style.display = "none";
+  modal.style.display = 'none';
 }
 
 // 로그인 버튼 클릭 시 로그인 모달 열기
-document.getElementById("loginBtn").addEventListener("click", function () {
-  openModal("loginModal");
+document.getElementById('loginBtn').addEventListener('click', function () {
+  openModal('loginModal');
 });
 
 // 회원가입 버튼 클릭 시 회원가입 모달 열기
-document.getElementById("signupBtn").addEventListener("click", function () {
-  openModal("signupModal");
+document.getElementById('signupBtn').addEventListener('click', function () {
+  openModal('signupModal');
 });
 
 // 회원가입 버튼 클릭 시 회원가입 처리
+
 document.getElementById("signupSubmit").addEventListener("click", async function () {
   const userId = document.getElementById("userId").value;
   const nickname = document.getElementById("nickname").value;
@@ -49,6 +50,7 @@ document.getElementById("signupSubmit").addEventListener("click", async function
     if (response.ok) {
       // 회원가입 성공
       alert(data.message); // 알림 창 띄우기
+
       location.reload(); // 페이지 새로고침
       // 회원가입 후 필요한 동작 수행
     } else {
@@ -58,28 +60,27 @@ document.getElementById("signupSubmit").addEventListener("click", async function
     }
   } catch (error) {
     console.error("Error:", error);
+
     // 에러 처리 로직 수행
   }
 });
 
 // 로그인 버튼 클릭 시 로그인 처리
-document
-  .getElementById("loginSubmit")
-  .addEventListener("click", async function () {
-    const userId = document.getElementById("lgUserId").value;
-    const password = document.getElementById("lgPassword").value;
+document.getElementById('loginSubmit').addEventListener('click', async function () {
+  const userId = document.getElementById('lgUserId').value;
+  const password = document.getElementById('lgPassword').value;
 
-    try {
-      const response = await fetch("/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          password,
-        }),
-      });
+  try {
+    const response = await fetch('/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId,
+        password,
+      }),
+    });
 
       const data = await response.json();
       if (response.ok) {
@@ -111,6 +112,7 @@ window.addEventListener("DOMContentLoaded", async function () {
         let content = post['content']
         let comments = post['comments'].length;
 
+
         let temp_html = `<div class="solo-card">
                           <div class="card w-75">
                             <div class="card-body">
@@ -131,3 +133,4 @@ const userInfo = (userId) => {
   window.location.href = `userInfo.html?id=${userId}`; // 메인 페이지로 이동
 
 }
+

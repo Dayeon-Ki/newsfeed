@@ -10,6 +10,8 @@ router.post('/', auth, (req, res) => {
   const userId = res.locals.user.userId;
   if (!content) return res.status(400).json({ message: "댓글 내용을 입력해주세요." });
 
+  console.log("postId:", postId)
+
   Comment.create({ PostId: postId, UserId: userId, content: content });
   res.status(201).json({ message: "댓글이 작성되었습니다." })
 
@@ -45,7 +47,9 @@ router.put('/:postId/comments/:commentId', auth, async (req, res) => {
   const { userId } = res.locals.user;
   const comment = await Comment.findOne({ where: { commentId } });
 
+
   if (!comment) return res.status(400).json({ message: "존재하지 않는 댓글은 삭제할 수 없습니다." })
+
   if (comment) {
     if (userId !== comment.UserId) {
       return res.status(400).json({ message: "댓글 작성자가 아닙니다." })
