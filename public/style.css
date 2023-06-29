@@ -22,12 +22,19 @@ body {
   justify-content: center;
   align-items: center;
   height: 15vh;
-  font-family: "Gowun Batang", sans-serif;
+  font-family: 'Gowun Batang', sans-serif;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
 .headerBtnGr {
   display: flex;
   gap: 10px;
+  justify-content: end;
+  margin-right: 20px;
+}
+
+.postPgBtn {
+  margin-top: 20px;
+  display: flex;
   justify-content: end;
   margin-right: 20px;
 }
@@ -39,4 +46,27 @@ body {
 
 .solo-card {
   margin-bottom: 30px;
+}
+
+#postCrTitle {
+  width: 70%;
+  height: 50px;
+}
+#postCrTitle::placeholder {
+  padding-left: 10px;
+}
+
+#postCrContent {
+  width: 70%;
+  height: 500px;
+}
+#postCrContent::placeholder {
+  padding-left: 10px;
+  position: absolute;
+  top: 2%;
+}
+
+main {
+  margin-left: 25%;
+  margin-top: 20px;
 }
