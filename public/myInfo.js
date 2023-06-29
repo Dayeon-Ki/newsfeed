@@ -97,3 +97,13 @@ function deleteCookie() {
     })
     .catch(console.error)
 }
+
+// 쿠키를 만들어주는것도 서버니까 삭제도 서버에서
+// function deleteCookie() {
+//   document.cookie = 'Authorization + =; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+// }
+
+document.getElementById('MainPgBtn').addEventListener('click', function () {
+  window.location.href = 'loginMain.html'; // 메인 페이지로 이동
+});
+

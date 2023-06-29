@@ -70,3 +70,9 @@ main {
   margin-left: 25%;
   margin-top: 20px;
 }
+
+.commentButtons {
+  display: flex;
+  margin-right: 0;
+  justify-content: end;
+}

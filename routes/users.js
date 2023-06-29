@@ -138,7 +138,7 @@ router.get('/:userId', async (req, res) => {
   const user = await User.findOne({
     where: { userId: userId },
     include: [{
-      model: Follow, as: "followees" // userId가 followee인 경우를 조회
+      model: Follow, as: "followees" // userId가 followee인 경우를 조회(userId의 follower를 보기 위해)
       , attributes: ["followerId"]
     }],
     attributes: ["userId", "nickname", "introduction"]
@@ -159,14 +159,14 @@ router.put('/:userId', auth, async (req, res) => {
   });
 
 
-  if (!user)
-    return res.status(400).json({ message: "존재하지 않는 사용자입니다." });
+  if (!user) return res.status(400).json({ message: "존재하지 않는 사용자입니다." });
   if (existingUser) {
-    if (nickname === existingUser.nickname)
-      return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
-    if (email === existingUser.email)
-      return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
+    if (nickname === existingUser.nickname) return res.status(409).json({ message: "이미 존재하는 닉네임입니다." });
+    if (email === existingUser.email) return res.status(409).json({ message: "이미 존재하는 이메일입니다." });
   }
+  if (password !== confirmPassword) return res.status(400).json({ message: "비밀번호를 확인해 주십시요" });
+  if (!email) return res.status(400).json({ message: "이메일을 입력해 주세요" });
+
   if (password !== confirmPassword)
     return res.status(400).json({ message: "비밀번호를 확인해 주십시요" });
   if (!email)
@@ -186,15 +186,13 @@ router.put('/:userId', auth, async (req, res) => {
   res.status(201).json({ message: "회원정보가 수정되었습니다." });
 }
 );
-
 // 회원 삭제
 router.delete('/:userId', auth, async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findOne({
     where: { userId },
   });
-  if (!user)
-    return res.status(400).json({ message: "잘못된 접근입니다. 존재하지 않는 회원입니다." });
+  if (!user) return res.status(400).json({ message: "잘못된 접근입니다. 존재하지 않는 회원입니다." });
   if (user) {
     if (userId !== user.userId) {
       return res.status(400).json({ message: "본인만이 삭제할 수 있습니다." });
