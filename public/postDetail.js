@@ -32,6 +32,17 @@ window.addEventListener('DOMContentLoaded', function () {
                           <div class="card w-75">
                             <div class="card-body">
                               <h5 class="card-title">${content}</h5>
+                              <div class="commentButtons">
+                                <button id="commentEdit" type="button" class="btn btn-outline-secondary">수정</button>
+                                <button id="commentDelete" type="button" class="btn btn-outline-secondary">삭제</button>
+                              </div>
+                              <!-- 댓글 수정 창 -->
+                              <div id="commentEditBox" style="display: none;">
+                                <div class="modal-body">
+                                  <input id="editContent" type="text" placeholder="내용">
+                                  <button id="editSubmit" type="button">확인</button>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>`;
@@ -132,5 +143,19 @@ document.getElementById('commentCr').addEventListener('click', async function ()
     }
   } catch (error) {
     console.error('Error:', error);
+  }
+});
+
+document.addEventListener('click', function (event) {
+  if (event.target.id === 'commentEdit') {
+    const commentEditBox = event.target.parentNode.nextElementSibling;
+    commentEditBox.style.display = 'block';
+
+    // 기존 댓글 내용 가져오기
+    const commentContent = event.target.parentNode.previousElementSibling.textContent;
+
+    // 인풋 요소에 기존 댓글 내용 설정
+    const editContentInput = commentEditBox.querySelector('#editContent');
+    editContentInput.value = commentContent;
   }
 });
