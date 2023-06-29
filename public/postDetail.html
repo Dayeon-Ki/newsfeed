@@ -31,10 +31,6 @@
       </div>
       <p class="postContent"></p>
     </div>
-    <div id="cmtPostBox">
-      <button id="commentCr" type="button" class="btn btn-outline-primary">작성</button>
-      <input id="commentIpt" type="text" placeholder="댓글을 작성해보세요">
-    </div>
     <!-- 수정 모달 -->
     <div id="modifyModal" style="display: none;">
       <div class="modal-dialog">
@@ -52,8 +48,16 @@
       </div>
     </div>
     <!-- 댓글박스 -->
+    <div id="cmtPostBox">
+      <button id="commentCr" type="button" class="btn btn-outline-secondary">작성</button>
+      <input id="commentIpt" type="text" placeholder="댓글을 작성해보세요">
+    </div>
     <div id="cmtGetBox">
-
+      <!-- 댓글 카드 -->
+      <div class="mycards">
+        <div class="row" id="cards-box">
+        </div>
+      </div>
     </div>
   </main>
 

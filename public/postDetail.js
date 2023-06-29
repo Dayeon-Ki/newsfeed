@@ -22,6 +22,21 @@ window.addEventListener('DOMContentLoaded', function () {
       postTitleEdit.value = data.post.title;
       let postContentEdit = document.querySelector('#modifyContent');
       postContentEdit.value = data.post.content;
+
+      let rows = data.post['comments'];
+      const commentBox = document.getElementById('cards-box');
+      rows.forEach(comment => {
+        let content = comment['content'];
+
+        let temp_html = `<div class="solo-card" onclick="goToPostDetail(${postId})">
+                          <div class="card w-75">
+                            <div class="card-body">
+                              <h5 class="card-title">${content}</h5>
+                            </div>
+                          </div>
+                        </div>`;
+        commentBox.insertAdjacentHTML('beforeend', temp_html);
+      });
     })
     .catch(error => {
       console.log('error', error);
@@ -92,4 +107,30 @@ document.getElementById('postDlBtn').addEventListener('click', async function ()
 // 메인 페이지로 이동 버튼 클릭 시
 document.getElementById('MainPgBtn').addEventListener('click', function () {
   window.location.href = 'loginMain.html'; // 메인 페이지로 이동
+});
+
+// 댓글 작성 버튼 클릭시 댓글 생성 처리
+document.getElementById('commentCr').addEventListener('click', async function () {
+  const content = document.getElementById('commentIpt').value;
+
+  try {
+    const response = await fetch(`api/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content,
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data.message);
+      alert('댓글이 작성되었습니다');
+      location.reload();
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
 });
