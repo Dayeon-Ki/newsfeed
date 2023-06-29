@@ -87,7 +87,7 @@ document.getElementById('loginSubmit').addEventListener('click', async function 
       // 로그인 성공
       console.log(data.message);
       alert('로그인 성공!'); // 알림 창 띄우기
-      window.location.href = 'user.html'; // 새로운 페이지로 이동
+      window.location.href = 'myInfo.html'; // 새로운 페이지로 이동
       // 로그인 후 필요한 동작 수행
     } else {
       // 로그인 실패
@@ -123,11 +123,4 @@ window.addEventListener('DOMContentLoaded', async function () {
         cardBox.insertAdjacentHTML('beforeend', temp_html);
       });
     });
-});
-
-// 게시글 작성 클릭 시 게시글 페이지로 이동
-document.getElementById('postPgBtn').addEventListener('click', function () {
-  if (confirm('게시글 작성 페이지로 이동하시겠습니까?')) {
-    window.location.href = 'post.html';
-  }
 });

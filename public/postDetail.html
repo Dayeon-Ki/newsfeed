@@ -25,24 +25,46 @@
     <button id="postMdBtn" type="button" class="btn btn-outline-primary">수정</button>
     <button id="postDlBtn" type="button" class="btn btn-outline-primary">삭제</button>
     <div id="postdetailBox">
-      <h3>게시글 제목</h3>
-      <p>작성자명</p>
-      <p>작성 일자</p>
-      <p>게시글 내용</p>
+      <h3 class="postTitle"></h3>
+      <div id="writer">
+        <p></p>
+      </div>
+      <p class="postContent"></p>
     </div>
+    <!-- 수정 모달 -->
+    <div id="modifyModal" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">게시글 수정</h5>
+            <button type="button" class="btn-close" onclick="closeModal('modifyModal')"></button>
+          </div>
+          <div class="modal-body">
+            <input id="modifyTitle" type="text" placeholder="제목">
+            <input id="modifyContent" type="text" placeholder="내용">
+            <button id="modifySubmit" type="button">확인</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 댓글박스 -->
     <div id="cmtPostBox">
-      <button id="commentCr" type="button" class="btn btn-outline-primary">작성</button>
+      <button id="commentCr" type="button" class="btn btn-outline-secondary">작성</button>
       <input id="commentIpt" type="text" placeholder="댓글을 작성해보세요">
     </div>
     <div id="cmtGetBox">
-
+      <!-- 댓글 카드 -->
+      <div class="mycards">
+        <div class="row" id="cards-box">
+        </div>
+      </div>
     </div>
   </main>
 
 </body>
 
 <!-- 자바스크립트 -->
-<script src="post.js"></script>
+<script src="postDetail.js"></script>
 
 
 </html>
