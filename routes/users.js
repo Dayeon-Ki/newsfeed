@@ -6,6 +6,8 @@ const auth = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
+const passport = require('passport')
+const KakaoStrategy = require('passport-kakao').Strategy
 
 
 
@@ -124,6 +126,8 @@ router.post('/login', async (req, res) => {
 router.get('/logout', (req, res) => {
   return res.clearCookie('Authorization').json({ message: "로그아웃 되었습니다." })
 })
+
+
 
 
 // 쿠키받아와서 미들웨어에 디코딩, user정보 넘겨주기
