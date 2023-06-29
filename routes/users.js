@@ -122,7 +122,7 @@ router.post('/:userId', auth, upload.single('image'), async (req, res) =>{
   const imgUrl = user.img.substring(56,)
   console.log(imgUrl)
   s3.deleteObject({
-    Bucket : "300gram-profile",
+    Bucket : process.env.BUCKET_NAME,
     Key : imgUrl
   }, (err, data) => {
     if (err) { throw err; }
