@@ -32,6 +32,13 @@ body {
   margin-right: 20px;
 }
 
+.postPgBtn {
+  margin-top: 20px;
+  display: flex;
+  justify-content: end;
+  margin-right: 20px;
+}
+
 .mycards {
   margin-top: 30px;
   margin-left: 20%;
@@ -39,4 +46,27 @@ body {
 
 .solo-card {
   margin-bottom: 30px;
+}
+
+#postCrTitle {
+  width: 70%;
+  height: 50px;
+}
+#postCrTitle::placeholder {
+  padding-left: 10px;
+}
+
+#postCrContent {
+  width: 70%;
+  height: 500px;
+}
+#postCrContent::placeholder {
+  padding-left: 10px;
+  position: absolute;
+  top: 2%;
+}
+
+main {
+  margin-left: 25%;
+  margin-top: 20px;
 }
