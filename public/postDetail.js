@@ -67,3 +67,29 @@ document.getElementById('modifySubmit').addEventListener('click', async function
       console.log('error', error);
     });
 });
+
+// 삭제 버튼 클릭 시 게시글 삭제 api 요청
+document.getElementById('postDlBtn').addEventListener('click', async function () {
+  try {
+    const response = await fetch(`/api/posts/${postId}`, {
+      method: 'DELETE',
+    });
+    if (response.ok) {
+      const data = await response.json();
+      // 삭제성공
+      console.log(data.message);
+      alert('게시글이 삭제되었습니다');
+      window.location.href = 'loginMain.html';
+    } else {
+      // 삭제 실패
+      console.log('게시글 삭제에 실패했습니다.');
+    }
+  } catch (error) {
+    console.log('오류가 발생했습니다.', error);
+  }
+});
+
+// 메인 페이지로 이동 버튼 클릭 시
+document.getElementById('MainPgBtn').addEventListener('click', function () {
+  window.location.href = 'loginMain.html'; // 메인 페이지로 이동
+});
