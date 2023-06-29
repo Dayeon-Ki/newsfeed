@@ -18,6 +18,9 @@ window.addEventListener('DOMContentLoaded', function () {
       const postContent = document.querySelector('.postContent');
       postContent.textContent = data.post.content;
 
+      const likeCnt = document.querySelector('.likeCnt');
+      likeCnt.textContent = data.post.likes.length;
+
       let postTitleEdit = document.querySelector('#modifyTitle');
       postTitleEdit.value = data.post.title;
       let postContentEdit = document.querySelector('#modifyContent');
@@ -28,11 +31,13 @@ window.addEventListener('DOMContentLoaded', function () {
       rows.forEach(comment => {
         const content = comment['content']; // 댓글테스트
         const commentId = comment['commentId']; // 1
+        const nickname = comment['user']['nickname'];
 
         const temp_html = `<div class="solo-card" data-commentId="${commentId}">
                           <div class="card w-75">
                             <div class="card-body">
                               <h5 class="card-title">${content}</h5>
+                              <p class="card-writer">작성자: ${nickname}</p>
                               <div class="commentButtons">
                                 <button id="commentEdit" type="button" class="btn btn-outline-secondary">수정</button>
                                 <button id="commentDelete" type="button" class="btn btn-outline-secondary">삭제</button>
@@ -221,5 +226,27 @@ document.addEventListener('click', async function (event) {
     } catch (error) {
       console.log('오류가 발생했습니다.', error);
     }
+  }
+});
+
+// 좋아요 버튼 누르면 게시글 좋아요 api처리하기
+document.getElementById('likeBtn').addEventListener('click', async function () {
+  try {
+    const response = await fetch(`/api/posts/${postId}/like`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log(data.message);
+      location.reload();
+    } else {
+      console.log(data.errMessage);
+    }
+  } catch (error) {
+    console.error('Error:', error);
   }
 });

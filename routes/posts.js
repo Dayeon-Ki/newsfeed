@@ -60,7 +60,13 @@ router.get('/:postId', auth, async (req, res) => {
   const post = await Post.findOne({
     where: { postId: postId },
     include: [
-      { model: Comment, as: 'comments', attributes: ['commentId', 'UserId', 'content'] },
+      {
+        model: Comment,
+
+        as: 'comments',
+        include: [{ model: User, as: 'user', attributes: ['nickname'] }],
+        attributes: ['commentId', 'UserId', 'content'],
+      },
       { model: Like, as: 'likes', attributes: ['userId'] },
       { model: User, as: 'user', attributes: ['nickname'] },
     ],

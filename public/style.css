@@ -32,14 +32,12 @@ body {
   margin-right: 20px;
 }
 
-
 .postPgBtn {
   margin-top: 20px;
   display: flex;
   justify-content: end;
   margin-right: 20px;
 }
-
 
 .mycards {
   margin-top: 30px;
@@ -48,7 +46,6 @@ body {
 
 .solo-card {
   margin-bottom: 30px;
-
 }
 
 #postCrTitle {
@@ -78,4 +75,9 @@ main {
   display: flex;
   margin-right: 0;
   justify-content: end;
+}
+
+.like {
+  display: flex;
+  margin-bottom: 20px;
 }
