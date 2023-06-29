@@ -1,3 +1,8 @@
+const express = require('express');
+const passport = require('passport')
+const router = express.Router();
+
+
 //* 카카오로 로그인하기 라우터 ***********************
 //? /kakao로 요청오면, 카카오 로그인 페이지로 가게 되고, 카카오 서버를 통해 카카오 로그인을 하게 되면, 다음 라우터로 요청한다.
 router.get('/kakao', passport.authenticate('kakao'));
@@ -14,3 +19,5 @@ router.get(
       res.redirect('/');
    },
 );
+
+module.exports = router;
