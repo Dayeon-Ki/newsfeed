@@ -171,6 +171,35 @@ document.addEventListener('click', function (event) {
   }
 });
 
+// 댓글 수정 확인 버튼 클릭 시 댓글 수정 처리
+document.addEventListener('click', async function (event) {
+  if (event.target.id === 'editSubmit') {
+    const commentId = event.target.closest('.solo-card').dataset.commentid;
+    const editedContent = document.querySelector('#editContent').value;
+    try {
+      const response = await fetch(`/api/posts/${postId}/comments/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: editedContent }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // 수정 성공
+        console.log(data.message);
+        alert('댓글 수정이 완료되었습니다');
+        location.reload();
+      } else {
+        // 삭제 실패
+        console.log('댓글 수정에 실패했습니다.');
+      }
+    } catch (error) {
+      console.log('오류가 발생했습니다.', error);
+    }
+  }
+});
+
 // 댓글 삭제 버튼 클릭 시 댓글 삭제 처리
 document.addEventListener('click', async function (event) {
   if (event.target.id === 'commentDelete') {
