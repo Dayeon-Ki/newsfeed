@@ -58,8 +58,6 @@ function modSubmit() {
   const introduction = document.getElementById("introduction").value;
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
-
-  console.log('userId:', userId)
   try {
     fetch(`/api/users/${userId}`, {
       method: "PUT",
@@ -84,9 +82,6 @@ function modSubmit() {
     // 에러 처리 로직 수행
   }
 }
-
-console.log('userId:', userId)
-
 
 // 쿠키 삭제
 

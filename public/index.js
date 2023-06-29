@@ -30,13 +30,6 @@ document.getElementById("signupSubmit").addEventListener("click", async function
   const confirmPassword = document.getElementById("confirmPassword").value;
 
   try {
-    console.log(userId)
-    console.log(nickname)
-    console.log(email);
-    console.log(introduction);
-    console.log(password);
-    console.log(confirmPassword);
-
     const response = await fetch("/api/users/signup", {
       method: "POST",
       headers: {
@@ -55,13 +48,12 @@ document.getElementById("signupSubmit").addEventListener("click", async function
     const data = await response.json();
     if (response.ok) {
       // 회원가입 성공
-      console.log(data.message);
-      alert("회원가입 성공!"); // 알림 창 띄우기
+      alert(data.message); // 알림 창 띄우기
       location.reload(); // 페이지 새로고침
       // 회원가입 후 필요한 동작 수행
     } else {
       // 회원가입 실패
-      console.log(data.errMessage);
+      alert(data.message);
       // 실패 처리 로직 수행
     }
   } catch (error) {
@@ -92,13 +84,12 @@ document
       const data = await response.json();
       if (response.ok) {
         // 로그인 성공
-        console.log(data.message);
-        alert("로그인 성공!"); // 알림 창 띄우기
-        window.location.href = "user.html"; // 새로운 페이지로 이동
+        alert(data.message); // 알림 창 띄우기
+        window.location.href = "myInfo.html"; // 새로운 페이지로 이동
         // 로그인 후 필요한 동작 수행
       } else {
         // 로그인 실패
-        console.log(data.errMessage);
+        alert(data.message);
         // 실패 처리 로직 수행
       }
     } catch (error) {
@@ -112,7 +103,6 @@ window.addEventListener("DOMContentLoaded", async function () {
   fetch("/api/posts", {})
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       let rows = data["results"];
       const cardBox = document.getElementById("cards-box");
       rows.forEach((post) => {
@@ -135,3 +125,9 @@ window.addEventListener("DOMContentLoaded", async function () {
       });
     });
 });
+
+
+const userInfo = (userId) => {
+  window.location.href = `userInfo.html?id=${userId}`; // 메인 페이지로 이동
+
+}

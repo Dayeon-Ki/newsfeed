@@ -46,8 +46,6 @@ router.get("/", async (req, res) => {
 router.post("/", auth, (req, res) => {
   const { title, content } = req.body;
   UserId = res.locals.user.userId;
-  console.log("Post", Post);
-  console.log("Comment", Comment);
   Post.create({ title, content, UserId });
   res.json({ message: "게시글을 생성하였습니다." });
 });

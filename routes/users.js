@@ -52,8 +52,6 @@ router.post("/signup", async (req, res) => {
           text: `인증 번호: ${randomNumber}`, // plain text body
           html: `<b>인증 번호: ${randomNumber}</b>`, // html body
         });
-
-        console.log("Message sent: %s", info.messageId);
       }
 
       main().catch(console.error);
@@ -72,7 +70,7 @@ router.post("/signup", async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    console.error(err)
   }
 });
 
@@ -96,7 +94,7 @@ router.post("/mail/:userId", async (req, res) => {
         .json({ message: "유효하지 않은 인증 코드입니다." });
     }
   } catch (err) {
-    console.log(err.message);
+    console.error(err)
   }
 });
 
@@ -126,7 +124,6 @@ router.post("/login", async (req, res) => {
 
 // 로그아웃
 router.get('/logout', (req, res) => {
-  console.log(res)
   return res.clearCookie('Authorization').json({ message: "로그아웃 되었습니다." })
 })
 
@@ -142,7 +139,10 @@ router.get("/:userId", async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findOne({
     where: { userId: userId },
-    include: [{ model: Follow, as: "followers", attributes: ["followerId"] }],
+    include: [{
+      model: Follow, as: "followees" // userId가 followee인 경우를 조회
+      , attributes: ["followerId"]
+    }],
     attributes: ["userId", "nickname", "introduction"]
   })
   if (!user) return res.status(400).json({ message: "존재하지 않는 사용자입니다." });
@@ -216,13 +216,10 @@ router.delete("/:userId", auth, async (req, res) => {
 // 유저 팔로우 / 취소
 router.get('/:userId/follow', auth, async (req, res) => {
   const followeeId = req.params.userId;
-  console.log('followeeId:', followeeId)
   const followerId = res.locals.user.userId;
-  console.log('followerId: ', followerId)
   const existingFollower = await Follow.findOne({
     where: { [Op.and]: [{ followeeId }, { followerId }] }
   });
-  console.log(existingFollower);
   if (existingFollower) {
     Follow.destroy({ where: { [Op.and]: [{ followeeId }, { followerId }] } });
     res.status(201).json({ message: "팔로우가 취소되었습니다." });
