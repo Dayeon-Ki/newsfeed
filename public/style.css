@@ -22,7 +22,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 15vh;
-  font-family: "Gowun Batang", sans-serif;
+  font-family: 'Gowun Batang', sans-serif;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
 .headerBtnGr {
@@ -69,4 +69,10 @@ body {
 main {
   margin-left: 25%;
   margin-top: 20px;
+}
+
+.commentButtons {
+  display: flex;
+  margin-right: 0;
+  justify-content: end;
 }
