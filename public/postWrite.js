@@ -8,27 +8,33 @@ document.getElementById('postCrBtn').addEventListener('click', async function ()
   const title = document.getElementById('postCrTitle').value;
   const content = document.getElementById('postCrContent').value;
 
-  try {
-    const response = await fetch('/api/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        content,
-      }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      console.log(data.message);
-      alert('게시글이 등록되었습니다');
+  fetch('/api/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title,
+      content,
+    }),
+  })
+    .then(res => res.json())
+    .then((data) => {
+      alert(data.message);
       window.location.href = 'loginMain.html';
-    } else {
-      console.log(data.errMessage);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
+    })
+    .catch(console.error(data.message))
 });
+
+// 로그아웃
+document.getElementById('logoutBtn').addEventListener('click', deleteCookie);
+
+function deleteCookie() {
+  fetch('/api/users/logout')
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      window.location.href = 'index.html';
+    })
+    .catch(console.error);
+}

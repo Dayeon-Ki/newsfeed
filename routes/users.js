@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const upload = require('../middlewares/uploader');
+const AWS = require('aws-sdk');
+require("dotenv").config();
 
 
 
@@ -195,10 +197,9 @@ router.put('/:userId', auth, async (req, res) => {
   res.status(201).json({ message: "회원정보가 수정되었습니다." });
 }
 );
-// 회원정보 사진 수정
-const AWS = require('aws-sdk');
-require("dotenv").config();
 
+
+// 회원정보 사진 수정
 
 const s3 = new AWS.S3({
   region: process.env.REGION,
@@ -209,13 +210,10 @@ const s3 = new AWS.S3({
 router.post('/photo/:userId', auth, upload.single('image'), async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findOne({ where: { userId: userId } });
-  console.log(user.img)
   const decordURL = decodeURIComponent(user.img)
   const imgUrl = decordURL.substring(56,)
-  console.log(imgUrl)
   if (user.img === null) {
     const uploadimageUrl = req.file.location;
-    console.log(uploadimageUrl)
     await User.update({ img: uploadimageUrl }, {
       where: {
         userId: userId
@@ -227,10 +225,8 @@ router.post('/photo/:userId', auth, upload.single('image'), async (req, res) => 
       Key: imgUrl
     }, (err, data) => {
       if (err) { throw err; }
-      console.log('s3 deleteObject ', data)
     })
     const imageUrl = req.file.location;
-    console.log(imageUrl)
     await User.update({ img: imageUrl }, {
       where: {
         userId: userId

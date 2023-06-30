@@ -21,11 +21,8 @@ window.addEventListener('DOMContentLoaded', function () {
       document.querySelector(
         '.follow',
       ).innerHTML = `<button id="followBtn" type="button" class="btn btn-outline-secondary" onclick='follow("${userId}")'>팔로우</button>`;
-    })
-    .then(() => {
-      document.getElementById('modifyBtn').addEventListener('click', () => {
-        openModal('modifyModal');
-      });
+      // 팔로우 버튼 클릭 시
+      document.getElementById('followBtn').addEventListener('click', follow);
     })
     .catch(error => {
       console.error('유저 정보를 가져오는 도중 오류가 발생했습니다:', error);
@@ -37,8 +34,7 @@ document.getElementById('listBtn').addEventListener('click', () => {
   window.location.href = 'loginMain.html'; // 메인 페이지로 이동
 });
 
-// 팔로우 버튼 클릭 시
-document.getElementById('followBtn').addEventListener('click', follow);
+
 
 // 팔로우 버튼 클릭 시 이벤트 실행
 function follow(userId) {
@@ -104,3 +100,15 @@ function deleteCookie() {
 // function deleteCookie() {
 //   document.cookie = 'Authorization + =; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
 // }
+// 로그아웃
+document.getElementById('logoutBtn').addEventListener('click', deleteCookie);
+
+function deleteCookie() {
+  fetch('/api/users/logout')
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      window.location.href = 'index.html';
+    })
+    .catch(console.error);
+}

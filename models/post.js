@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
       this.hasMany(models.Comment, { foreignKey: "postId", as: "comments" });
-      this.hasMany(models.Like, {foreignKey: "postId", as: 'likes'});
+      this.hasMany(models.Like, { foreignKey: "postId", as: 'likes' });
     }
   }
   Post.init({
@@ -43,6 +43,9 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
+    },
+    img: {
+      type: Sequelize.STRING
     }
   }, {
     sequelize,

@@ -10,8 +10,6 @@ router.post('/', auth, (req, res) => {
   const userId = res.locals.user.userId;
   if (!content) return res.status(400).json({ message: '댓글 내용을 입력해주세요.' });
 
-  console.log('postId:', postId);
-
   Comment.create({ PostId: postId, UserId: userId, content: content });
   res.status(201).json({ message: '댓글이 작성되었습니다.' });
 });

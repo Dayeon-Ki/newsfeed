@@ -4,12 +4,10 @@ const postId = params.get('id');
 
 // 게시글 상세 정보 조회 api 요청
 window.addEventListener('DOMContentLoaded', function () {
-  console.log(postId);
 
   this.fetch(`api/posts/${postId}`)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
 
       const postTitle = document.querySelector('.postTitle');
       postTitle.textContent = data.post.title;
@@ -100,7 +98,6 @@ document.getElementById('modifySubmit').addEventListener('click', async function
   })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       alert('게시글이 수정되었습니다');
       location.reload();
     })
@@ -118,8 +115,7 @@ document.getElementById('postDlBtn').addEventListener('click', async function ()
     if (response.ok) {
       const data = await response.json();
       // 삭제성공
-      console.log(data.message);
-      alert('게시글이 삭제되었습니다');
+      alert(data.message);
       window.location.href = 'loginMain.html';
     } else {
       // 삭제 실패
@@ -152,8 +148,7 @@ document.getElementById('commentCr').addEventListener('click', async function ()
 
     const data = await response.json();
     if (response.ok) {
-      console.log(data.message);
-      alert('댓글이 작성되었습니다');
+      alert(data.message);
       location.reload();
     }
   } catch (error) {
@@ -200,8 +195,7 @@ document.addEventListener('click', async function (event) {
       if (response.ok) {
         const data = await response.json();
         // 수정 성공
-        console.log(data.message);
-        alert('댓글 수정이 완료되었습니다');
+        alert(data.message);
         location.reload();
       } else {
         // 삭제 실패
@@ -224,8 +218,7 @@ document.addEventListener('click', async function (event) {
       if (response.ok) {
         const data = await response.json();
         // 삭제 성공
-        console.log(data.message);
-        alert('댓글이 삭제되었습니다');
+        alert(data.message);
         location.reload();
       } else {
         // 삭제 실패
@@ -249,10 +242,10 @@ document.getElementById('likeBtn').addEventListener('click', async function () {
 
     const data = await response.json();
     if (response.ok) {
-      console.log(data.message);
+      alert(data.message);
       location.reload();
     } else {
-      console.log(data.errMessage);
+      console.log(data.message);
     }
   } catch (error) {
     console.error('Error:', error);

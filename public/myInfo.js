@@ -6,7 +6,6 @@ window.addEventListener('DOMContentLoaded', function () {
   fetch('/api/users/currentUser', {}) // 유저정보 받아와서 뿌려주기
     .then(res => res.json())
     .then(data => {
-      console.log(data)
       const photo = document.querySelector('#profilePhoto');
       const photoPath = `<img src='${data.user.img}'>`
       photo.innerHTML = photoPath
@@ -97,7 +96,6 @@ uploadBtn.addEventListener("click", function () {
   formData.append("image", fileInput.files[0]); // formData에 append해줄때는 append시의 이름으로 전송되기 때문에 multer에 오는 이름과 맞춰줘야함
   // 파일 인풋에 들어간 파일들은 files 라는 리스트로 저장된다.
   // input에 multiple을 선언해 여러개의 파일을 선택한 경우가 아니라면 files[0] 으로 input에 추가한 파일 객체를 찾을 수 있다.
-  console.log(userId)
   fetch(`/api/users/photo/${userId}`, {
     method: 'POST',
     cache: 'no-cache',
@@ -105,7 +103,7 @@ uploadBtn.addEventListener("click", function () {
   })
     .then(res => res.json())
     .then((data) => {
-      console.log(data)
+      alert(data)
     })
 
 });
@@ -113,12 +111,20 @@ uploadBtn.addEventListener("click", function () {
 
 fileInput.onchange = () => {
   const selectedFile = fileInput.files[0];
-  console.log(selectedFile);
 };
 
 
-// 쿠키 삭제
 
+// 쿠키를 만들어주는것도 서버니까 삭제도 서버에서
+// function deleteCookie() {
+//   document.cookie = 'Authorization + =; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+// }
+
+document.getElementById('MainPgBtn').addEventListener('click', function () {
+  window.location.href = `loginMain.html?id=${userId}`; // 메인 페이지로 이동
+});
+
+// 로그아웃
 document.getElementById('logoutBtn').addEventListener('click', deleteCookie);
 
 function deleteCookie() {
@@ -130,12 +136,3 @@ function deleteCookie() {
     })
     .catch(console.error);
 }
-
-// 쿠키를 만들어주는것도 서버니까 삭제도 서버에서
-// function deleteCookie() {
-//   document.cookie = 'Authorization + =; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
-// }
-
-document.getElementById('MainPgBtn').addEventListener('click', function () {
-  window.location.href = 'loginMain.html'; // 메인 페이지로 이동
-});

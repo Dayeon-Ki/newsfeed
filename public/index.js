@@ -165,6 +165,8 @@ window.addEventListener("DOMContentLoaded", async function () {
 
 window.Kakao.init('eee10d4b2a6b97065370b42717f9e358');
 
+
+// 이거는 조금 더 공부해보기 위해 남겨둔 코드입니다.
 // document.getElementById('kakaoLogin').addEventListener('click', function () {
 //   window.Kakao.Auth.login({
 //     scope: 'profile_nickname, account_email',
