@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css" />
-  <title>개인 페이지</title>
+  <title>게시글 페이지</title>
   <!-- 부트스트랩 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
@@ -15,32 +15,24 @@
 
 <body>
   <header>
-    <h1 class="header">뉴스피드 프로젝트</h1>
-    <h3 class="headerSub">유저 정보 페이지</h3>
+    <h1 class="header">뉴스피드 프로젝트 - 게시글 작성</h1>
   </header>
   <div class="headerBtnGr">
     <button id="logoutBtn" type="button" class="btn btn-outline-primary">로그아웃</button>
     <button id="MainPgBtn" type="button" class="btn btn-outline-primary">메인페이지</button>
   </div>
   <main>
-    <div class="nickname">
-      <p>사용자 이름</p>
-      <button id="nameMod" type="button" class="btn btn-outline-secondary">수정</button>
-    </div>
-    <div class="introduction">
-      <p>한 줄 소개</p>
-      <button id="introMod" type="button" class="btn btn-outline-secondary">수정</button>
-    </div>
-    <div class="password">
-      <p>비밀번호</p>
-      <button id="PWMod" type="button" class="btn btn-outline-secondary">수정</button>
-    </div>
+    <input id="postCrTitle" type="text" placeholder="제목">
+    <p></p>
+    <input id="postCrContent" type="text" placeholder="내용">
+    <p></p>
+    <button id="postCrBtn" type="button" class="btn btn-outline-primary">등록</button>
   </main>
 
 </body>
 
 <!-- 자바스크립트 -->
-<script src="user.js"></script>
+<script src="postWrite.js"></script>
 
 
 </html>

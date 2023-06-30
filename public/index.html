@@ -22,6 +22,7 @@
     </header>
     <div class="headerBtnGr">
       <button id="loginBtn" type="button" class="btn btn-outline-primary">로그인</button>
+      <button id="emailAuth" type="button" class="btn btn-outline-primary">이메일 인증</button>
       <button id="signupBtn" type="button" class="btn btn-outline-primary">회원가입</button>
     </div>
     <main>
@@ -48,6 +49,22 @@
         </div>
       </div>
 
+      <div id="emailModal" style="display: none">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">이메일 인증</h5>
+              <button type="button" class="btn-close" onclick="closeModal('emailModal')"></button>
+            </div>
+            <div class="modal-body">
+              <input id="emailUserId" type="text" placeholder="ID" />
+              <input id="emailCode" type="text" placeholder="인증코드" />
+              <button id="emailSubmit" type="button">이메일 인증</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="signupModal" style="display: none">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -60,13 +77,17 @@
               <input id="nickname" type="text" placeholder="닉네임" />
               <input id="email" type="text" placeholder="이메일" />
               <input id="introduction" type="text" placeholder="자기소개" />
-              <input id="password" type="text" placeholder="비밀번호" />
+              <input id="password" type="password" placeholder="비밀번호" />
               <input id="confirmPassword" type="password" placeholder="비밀번호 확인" />
               <button id="signupSubmit" type="button">회원가입</button>
             </div>
           </div>
         </div>
       </div>
+
+      <button id="userInfo" type="button" class="btn btn-outline-secondary" onclick="userInfo('chaewonjjyan')">
+        // 테스트용 추후 삭제 유저정보상세페이지이동
+      </button>
     </main>
 
     <!-- 카드 -->
@@ -77,10 +98,4 @@
 
   <!-- 자바스크립트 -->
   <script src="index.js"></script>
-  <script>
-    // user.html 파일 로드
-    function loadUserPage() {
-      window.location.href = 'user.html';
-    }
-  </script>
 </html>

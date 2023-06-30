@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router({mergeParams:true});
+const router = express.Router({ mergeParams: true });
 const { Comment } = require('../models');
 const auth = require('../middlewares/auth');
 
@@ -8,7 +8,7 @@ router.post('/', auth, (req, res) => {
   const { postId } = req.params;
   const { content } = req.body;
   const userId = res.locals.user.userId;
-  if (!content) return res.status(400).json({ errMessage: "댓글 내용을 입력해주세요." });
+  if (!content) return res.status(400).json({ message: "댓글 내용을 입력해주세요." });
 
   console.log("postId:", postId)
 
@@ -25,10 +25,10 @@ router.put('/:commentId', auth, async (req, res) => {
   const { userId } = res.locals.user;
   const comment = await Comment.findOne({ where: { commentId } });
 
-  if (!comment) return res.status(400).json({ errmessage: "댓글 내용을 입력해 주세요." })
+  if (!comment) return res.status(400).json({ message: "댓글 내용을 입력해 주세요." })
   if (comment) {
     if (userId !== comment.UserId) {
-      return res.status(400).json({ errMessage: "댓글 작성자가 아닙니다." })
+      return res.status(400).json({ message: "댓글 작성자가 아닙니다." })
     }
     else {
       await Comment.update({ content: content }, {
@@ -42,15 +42,15 @@ router.put('/:commentId', auth, async (req, res) => {
 })
 
 // 댓글 삭제
-router.put('/:postId/comments/:commentId', auth, async (req, res) => {
+router.delete('/:commentId', auth, async (req, res) => {
   const commentId = req.params.commentId;
   const { userId } = res.locals.user;
   const comment = await Comment.findOne({ where: { commentId } });
 
-  if (!comment) return res.status(400).json({ errmessage: "존재하지 않는 댓글은 삭제할 수 없습니다." })
+  if (!comment) return res.status(400).json({ message: "존재하지 않는 댓글은 삭제할 수 없습니다." })
   if (comment) {
     if (userId !== comment.UserId) {
-      return res.status(400).json({ errMessage: "댓글 작성자가 아닙니다." })
+      return res.status(400).json({ message: "댓글 작성자가 아닙니다." })
     }
     else {
       await Comment.destroy({
