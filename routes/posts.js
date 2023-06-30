@@ -27,8 +27,8 @@ router.get("/", async (req, res) => {
     attributes: ['postId', 'UserId', 'title', 'content', 'createdAt'],
     order: [['createdAt', 'DESC']],
   });
-  
-  
+
+
   if (posts.length !== 0) {
     const results = posts.map(post => {
       console.log(post);
@@ -42,11 +42,9 @@ router.get("/", async (req, res) => {
         comments: post.comments,
       };
     });
-    console.log(results);
-
-    res.status(200).json({ results });
+    res.status(200).json({ results })
   } else {
-    res.json({ message: '피드가 존재하지 않습니다.' });
+    res.json({ message: "피드가 존재하지 않습니다." });
   }
 });
 
@@ -76,7 +74,6 @@ router.get("/:postId", auth, async (req, res) => {
 
 // 게시글 수정
 router.put('/:postId', auth, async (req, res) => {
-
   const { postId } = req.params;
   const { title, content } = req.body;
   const { userId } = res.locals.user;
@@ -94,8 +91,9 @@ router.put('/:postId', auth, async (req, res) => {
   }
 });
 
+
 // 게시글 삭제
-router.delete("/:postId", auth, async (req, res) => {
+router.delete('/:postId', auth, async (req, res) => {
   const { postId } = req.params;
   const { userId } = res.locals.user;
   const post = await Post.findOne({

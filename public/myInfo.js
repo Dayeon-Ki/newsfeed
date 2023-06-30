@@ -21,13 +21,12 @@ window.addEventListener("DOMContentLoaded", function () {
     })
     .catch((error) => {
       console.error("유저 정보를 가져오는 도중 오류가 발생했습니다:", error);
-
     });
 });
 
 // 메인 페이지로 이동 버튼 클릭 시
 document.getElementById("MainPgBtn").addEventListener("click", function () {
-  window.location.href = "index.html"; // 메인 페이지로 이동
+  window.location.href = "loginMain.html"; // 메인 페이지로 이동
 });
 
 

@@ -42,14 +42,12 @@ router.put('/:commentId', auth, async (req, res) => {
 })
 
 // 댓글 삭제
-router.put('/:postId/comments/:commentId', auth, async (req, res) => {
+router.delete('/:commentId', auth, async (req, res) => {
   const commentId = req.params.commentId;
   const { userId } = res.locals.user;
   const comment = await Comment.findOne({ where: { commentId } });
 
-
   if (!comment) return res.status(400).json({ message: "존재하지 않는 댓글은 삭제할 수 없습니다." })
-
   if (comment) {
     if (userId !== comment.UserId) {
       return res.status(400).json({ message: "댓글 작성자가 아닙니다." })
