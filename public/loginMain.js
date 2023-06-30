@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', async function () {
       let rows = data['results'];
       const cardBox = document.getElementById('cards-box');
       rows.forEach(post => {
-        let nickname = post['content'];
+        let nickname = post['writer'];
         let title = post['title'];
         let postId = post['postId'];
 
@@ -35,3 +35,8 @@ document.getElementById('postPgBtn').addEventListener('click', function () {
 function goToPostDetail(postId) {
   window.location.href = 'postDetail.html?id=' + postId;
 }
+
+// 마이페이지 클릭시 myInfo 페이지로 이동
+document.getElementById('myInfoBtn').addEventListener('click', function () {
+  window.location.href = `myInfo.html?id=${userId}`;
+});
