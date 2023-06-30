@@ -7,8 +7,9 @@ window.addEventListener('DOMContentLoaded', function () {
     .then(res => res.json())
     .then(data => {
       console.log(data)
-      const photo = this.document.querySelector('#profilePhoto');
-      photo.innerHTML = data.user.img
+      const photo = document.querySelector('#profilePhoto');
+      const photoPath = `<img src='${data.user.img}'>`
+      photo.innerHTML = photoPath
       const idInfo = document.querySelector('#idInfo');
       idInfo.textContent = 'ID : ' + data.user.userId;
       const nicknameInfo = document.querySelector('#nickInfo');
