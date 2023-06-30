@@ -60,7 +60,6 @@ router.post('/signup', async (req, res) => {
         nickname,
         email,
         password: encrypted,
-        password: encrypted,
         introduction,
         randomNumber: randomNumber.toString(),
       });
