@@ -129,8 +129,16 @@ router.get('/logout', (req, res) => {
 
 // 쿠키받아와서 미들웨어에 디코딩, user정보 넘겨주기
 router.get("/currentUser", auth, async (req, res) => {
-  const { userId, nickname, email, introduction, createdAt } = res.locals.user;
-  res.json({ userId, nickname, email, introduction, createdAt });
+  const { userId } = res.locals.user;
+  const user = await User.findOne({
+    where: { userId: userId },
+    include: [{
+      model: Follow, as: "followees" // userId가 followee인 경우를 조회(userId의 follower를 보기 위해)
+      , attributes: ["followerId"]
+    }],
+    attributes: ["userId", "nickname", "introduction", "img", 'createdAt']
+  })
+  res.json({ user });
 });
 
 // 회원정보 조회
@@ -198,7 +206,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
-router.post('/:userId', auth, upload.single('image'), async (req, res) =>{
+router.post('/photo/:userId', auth, upload.single('image'), async (req, res) => {
   const userId = req.params.userId;
   const user = await User.findOne({ where: { userId: userId } });
   console.log(user.img)
@@ -208,28 +216,28 @@ router.post('/:userId', auth, upload.single('image'), async (req, res) =>{
   if (user.img === null) {
     const uploadimageUrl = req.file.location;
     console.log(uploadimageUrl)
-    await User.update({ img : uploadimageUrl},{
-    where: {
-      userId: userId
-    }
-  })
+    await User.update({ img: uploadimageUrl }, {
+      where: {
+        userId: userId
+      }
+    })
   } else {
     s3.deleteObject({
-      Bucket : process.env.BUCKET_NAME,
-      Key : imgUrl
+      Bucket: process.env.BUCKET_NAME,
+      Key: imgUrl
     }, (err, data) => {
       if (err) { throw err; }
       console.log('s3 deleteObject ', data)
     })
     const imageUrl = req.file.location;
     console.log(imageUrl)
-    await User.update({ img : imageUrl},{
+    await User.update({ img: imageUrl }, {
       where: {
         userId: userId
       }
     })
   }
-  res.status(201).json({ Message : "사진이 변경되었습니다."});
+  res.status(201).json({ Message: "사진이 변경되었습니다." });
 });
 
 

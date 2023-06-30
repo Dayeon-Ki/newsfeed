@@ -24,6 +24,7 @@
   </div>
   <main>
     <div class="userInfo">
+      <div id="profilePhoto"></div>
       <p id="idInfo">ID</p>
       <p id="nickInfo">닉네임</p>
       <p id="introInfo">자기소개</p>
@@ -46,8 +47,10 @@
             <input id="password" type="password" placeholder="비밀번호" />
             <input id="confirmPassword" type="password" placeholder="비밀번호 확인" />
             <button id="modifySubmit" type="button">수정</button>
-            <input type="file" name="file" id="imageFileOpenInput" accept="image/*">
-            <input type="submit" id="photoUpload" value="프로필사진 업로드">
+            <input type="file" id='image' name="image"  accept="image/*">
+            <button type="submit" id="uploadBtn" value="프로필사진 업로드">업로드</button>
+
+            </form>
           </div>
         </div>
       </div>
