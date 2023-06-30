@@ -18,7 +18,6 @@ router.get('/', async (req, res) => {
     include: [
       {
         model: Comment,
-
         as: 'comments',
         include: [{ model: User, as: 'user', attributes: ['nickname'] }],
         attributes: ['commentId', 'content'],
@@ -31,8 +30,6 @@ router.get('/', async (req, res) => {
 
   if (posts.length !== 0) {
     const results = posts.map(post => {
-      console.log(post);
-
       return {
         postId: post.postId,
         writer: post.user.nickname,
@@ -55,18 +52,31 @@ const s3 = new AWS.S3({
 });
 
 // 게시글 작성
-router.post('/', auth, upload.single('image'), async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { title, content } = req.body;
-  const { userId } = res.locals.user;
+  const UserId = res.locals.user.userId;
   // 사진 업로드된 경로 불러와서 함께 저장
-  const uploadimageUrl = req.file.location;
-  if (uploadimageUrl) { const img = uploadimageUrl }
-  else { const img = null }
+  // const uploadimageUrl = req.file.location;
+  // if (uploadimageUrl) { const img = uploadimageUrl }
+  // else { const img = null }
 
 
-  Post.create({ title, content, userId, img });
+  Post.create({ title, content, UserId });
   res.json({ message: '게시글을 생성하였습니다.' });
 });
+
+// router.post('/', auth, upload.single('image'), async (req, res) => {
+//   const { title, content } = req.body;
+//   const { userId } = res.locals.user;
+//   사진 업로드된 경로 불러와서 함께 저장
+//   const uploadimageUrl = req.file.location;
+//   if (uploadimageUrl) { const img = uploadimageUrl }
+//   else { const img = null }
+
+
+//   Post.create({ title, content, userId });
+//   res.json({ message: '게시글을 생성하였습니다.' });
+// });
 
 
 

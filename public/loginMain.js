@@ -1,21 +1,24 @@
+const params = new URLSearchParams(window.location.search);
+const userId = params.get('id');
+
 // 피드 불러오기
 window.addEventListener('DOMContentLoaded', async function () {
   fetch('/api/posts')
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       let rows = data['results'];
       const cardBox = document.getElementById('cards-box');
       rows.forEach(post => {
         let nickname = post['writer'];
         let title = post['title'];
         let postId = post['postId'];
-
+        let comment = post.comments.length;
         let temp_html = `<div class="solo-card" onclick="goToPostDetail(${postId})">
                           <div class="card w-75">
                             <div class="card-body">
                               <h5 class="card-title">제목: ${title}</h5>
                               <p class="card-text">작성자: ${nickname}</p>
+                              <p> 댓글 : ${comment} 개 </p>
                             </div>
                           </div>
                         </div>`;
