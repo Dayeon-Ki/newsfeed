@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', async function () {
       let rows = data['results'];
       const cardBox = document.getElementById('cards-box');
       rows.forEach(post => {
-        let nickname = post['content'];
+        let nickname = post['writer'];
         let title = post['title'];
         let postId = post['postId'];
 
