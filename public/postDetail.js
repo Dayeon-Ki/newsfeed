@@ -258,3 +258,17 @@ document.getElementById('likeBtn').addEventListener('click', async function () {
     console.error('Error:', error);
   }
 });
+
+
+// 로그아웃
+document.getElementById('logoutBtn').addEventListener('click', deleteCookie);
+
+function deleteCookie() {
+  fetch('/api/users/logout')
+    .then(res => res.json())
+    .then(data => {
+      alert(data.message);
+      window.location.href = 'index.html';
+    })
+    .catch(console.error);
+}

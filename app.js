@@ -36,9 +36,9 @@ app.use(passport.session()); // req.session 객체에 passport정보를 추가 �
 // passport.session()이 실행되면, 세션쿠키 정보를 바탕으로 해서 passport/index.js의 deserializeUser()가 실행하게 한다.
 
 //* 라우터
-app.use('/auth', authRouter);
+app.use('/auth', authRouter); // 카카오로그인
 app.use("/api", indexRouter);
 
 app.listen(port, () => {
-  console.log(port, "번 포트로 서버 실행 완료");
+   console.log(port, "번 포트로 서버 실행 완료");
 });

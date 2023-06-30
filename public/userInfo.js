@@ -7,6 +7,9 @@ window.addEventListener('DOMContentLoaded', function () {
   fetch(`/api/users/${userId}`, {}) // 유저정보 받아와서 뿌려주기
     .then(res => res.json())
     .then(data => {
+      const photo = document.querySelector('#profilePhoto');
+      const photoPath = `<img src='${data.user.img}'>`
+      photo.innerHTML = photoPath
       const idInfo = document.querySelector('#idInfo');
       idInfo.textContent = 'ID : ' + data.user.userId;
       const nicknameInfo = document.querySelector('#nickInfo');
