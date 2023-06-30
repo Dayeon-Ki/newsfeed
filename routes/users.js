@@ -6,6 +6,7 @@ const auth = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
+const upload = require('../middlewares/uploader');
 
 
 
@@ -62,6 +63,7 @@ router.post('/signup', async (req, res) => {
         password: encrypted,
         introduction,
         randomNumber: randomNumber.toString(),
+        img: null
       });
       res.status(201).json({
         message: '회원 가입에 성공하였습니다.',
@@ -140,7 +142,7 @@ router.get('/:userId', async (req, res) => {
       model: Follow, as: "followees" // userId가 followee인 경우를 조회(userId의 follower를 보기 위해)
       , attributes: ["followerId"]
     }],
-    attributes: ["userId", "nickname", "introduction"]
+    attributes: ["userId", "nickname", "introduction", "img"]
   })
   if (!user) return res.status(400).json({ message: "존재하지 않는 사용자입니다." });
   res.status(200).json({ user })
@@ -185,6 +187,52 @@ router.put('/:userId', auth, async (req, res) => {
   res.status(201).json({ message: "회원정보가 수정되었습니다." });
 }
 );
+// 회원정보 사진 수정
+const AWS = require('aws-sdk');
+require("dotenv").config();
+
+
+const s3 = new AWS.S3({
+  region: process.env.REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+router.post('/:userId', auth, upload.single('image'), async (req, res) =>{
+  const userId = req.params.userId;
+  const user = await User.findOne({ where: { userId: userId } });
+  console.log(user.img)
+  const decordURL = decodeURIComponent(user.img)
+  const imgUrl = decordURL.substring(56,)
+  console.log(imgUrl)
+  if (user.img === null) {
+    const uploadimageUrl = req.file.location;
+    console.log(uploadimageUrl)
+    await User.update({ img : uploadimageUrl},{
+    where: {
+      userId: userId
+    }
+  })
+  } else {
+    s3.deleteObject({
+      Bucket : process.env.BUCKET_NAME,
+      Key : imgUrl
+    }, (err, data) => {
+      if (err) { throw err; }
+      console.log('s3 deleteObject ', data)
+    })
+    const imageUrl = req.file.location;
+    console.log(imageUrl)
+    await User.update({ img : imageUrl},{
+      where: {
+        userId: userId
+      }
+    })
+  }
+  res.status(201).json({ Message : "사진이 변경되었습니다."});
+});
+
+
 // 회원 삭제
 router.delete('/:userId', auth, async (req, res) => {
   const userId = req.params.userId;
