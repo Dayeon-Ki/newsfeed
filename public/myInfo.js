@@ -1,10 +1,12 @@
+const params = new URLSearchParams(window.location.search);
+const userId = params.get('id');
+
 window.addEventListener("DOMContentLoaded", function () {
   // 유저 정보(쿠키) 넘겨주기
   fetch("/api/users/currentUser", {
   }) // 유저정보 받아와서 뿌려주기
     .then((res) => res.json())
     .then((data) => {
-      userId = data.userId;
       const idInfo = document.querySelector("#idInfo");
       idInfo.textContent = 'ID : ' + data.userId;
       const nicknameInfo = document.querySelector("#nickInfo");
@@ -52,7 +54,6 @@ document.getElementById("modifySubmit").addEventListener("click", modSubmit);
 
 // 수정버튼 클릭 시 실행
 function modSubmit() {
-  const userId = document.getElementById("userId").value;
   const nickname = document.getElementById("nickname").value;
   const email = document.getElementById("email").value;
   const introduction = document.getElementById("introduction").value;
