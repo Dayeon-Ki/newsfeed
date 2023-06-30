@@ -38,5 +38,5 @@ function goToPostDetail(postId) {
 
 // 마이페이지 클릭시 myInfo 페이지로 이동
 document.getElementById('myInfoBtn').addEventListener('click', function () {
-  window.location.href = 'myInfo.html';
+  window.location.href = `myInfo.html?id=${userId}`;
 });

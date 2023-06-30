@@ -44,8 +44,8 @@ window.addEventListener('DOMContentLoaded', function () {
         const temp_html = `<div class="solo-card" data-commentId="${commentId}">
                           <div class="card w-75">
                             <div class="card-body">
-                              <h5 class="card-title">${content}</h5>
                               <p class="card-writer">작성자: ${nickname}</p>
+                              <h5 class="card-title">${content}</h5>
                               <div class="commentButtons">
                                 <button id="commentEdit" type="button" class="btn btn-outline-secondary">수정</button>
                                 <button id="commentDelete" type="button" class="btn btn-outline-secondary">삭제</button>
