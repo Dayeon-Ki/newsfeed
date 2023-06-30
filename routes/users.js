@@ -1,20 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const { User, Follow } = require('../models');
-const { Op } = require('sequelize');
-const auth = require('../middlewares/auth');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
+const { User, Follow } = require("../models");
+const { Op } = require("sequelize");
+const auth = require("../middlewares/auth");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
+
 
 
 // 회원가입
 router.post('/signup', async (req, res) => {
   try {
+
     const { userId, nickname, password, email, confirmPassword, introduction } = req.body;
-    const encrypted = await bcrypt.hash(password, 10);
+    const encrypted = await bcrypt.hash(password, 10)
     const existingUser = await User.findOne({
       where: {
+        [Op.or]: [{ userId: userId }, { nickname: nickname }, { email: email }],
         [Op.or]: [{ userId: userId }, { nickname: nickname }, { email: email }],
       },
     });
@@ -24,7 +27,7 @@ router.post('/signup', async (req, res) => {
       if (email === existingUser.email) return res.status(400).json({ message: "이미 존재하는 이메일입니다." });
     } else {
       if (password !== confirmPassword) {
-        return res.status(400).json({ message: "비밀번호를 확인하여 주십시오." });
+        return res.status(400).json({ message: '비밀번호를 확인하여 주십시오.' });
       }
 
       // 랜덤한 6자리 숫자 생성
@@ -48,8 +51,6 @@ router.post('/signup', async (req, res) => {
           text: `인증 번호: ${randomNumber}`, // plain text body
           html: `<b>인증 번호: ${randomNumber}</b>`, // html body
         });
-
-        console.log('Message sent: %s', info.messageId);
       }
 
       main().catch(console.error);
@@ -58,6 +59,7 @@ router.post('/signup', async (req, res) => {
         userId,
         nickname,
         email,
+        password: encrypted,
         password: encrypted,
         introduction,
         randomNumber: randomNumber.toString(),
@@ -106,7 +108,6 @@ router.post('/login', async (req, res) => {
     const passwordOk = await bcrypt.compare(password, user.password)
     if (!passwordOk) return res.status(400).json({ message: "비밀번호를 확인해 주세요." });
     if (!user.emailConfirm) return res.status(401).json({ message: "이메일 인증이 필요합니다." });
-
   }
 
   const token = jwt.sign(
@@ -147,7 +148,6 @@ router.get('/:userId', async (req, res) => {
 })
 
 
-
 // 회원정보 수정
 router.put('/:userId', auth, async (req, res) => {
   const userId = req.params.userId;
@@ -167,6 +167,10 @@ router.put('/:userId', auth, async (req, res) => {
   if (password !== confirmPassword) return res.status(400).json({ message: "비밀번호를 확인해 주십시요" });
   if (!email) return res.status(400).json({ message: "이메일을 입력해 주세요" });
 
+  if (password !== confirmPassword)
+    return res.status(400).json({ message: "비밀번호를 확인해 주십시요" });
+  if (!email)
+    return res.status(400).json({ message: "이메일을 입력해 주세요" });
   await User.update(
     {
       nickname: nickname,
@@ -182,8 +186,6 @@ router.put('/:userId', auth, async (req, res) => {
   res.status(201).json({ message: "회원정보가 수정되었습니다." });
 }
 );
-
-
 // 회원 삭제
 router.delete('/:userId', auth, async (req, res) => {
   const userId = req.params.userId;
@@ -216,7 +218,6 @@ router.get('/:userId/follow', auth, async (req, res) => {
     res.status(201).json({ message: "해당 유저를 팔로우하였습니다." });
   }
 })
-
 
 
 

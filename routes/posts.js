@@ -38,8 +38,6 @@ router.get('/', async (req, res) => {
         comments: post.comments,
       };
     });
-    console.log(results);
-
     res.status(200).json({ results });
   } else {
     res.json({ message: '피드가 존재하지 않습니다.' });

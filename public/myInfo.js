@@ -3,7 +3,6 @@ window.addEventListener('DOMContentLoaded', function () {
   fetch('/api/users/currentUser', {}) // 유저정보 받아와서 뿌려주기
     .then(res => res.json())
     .then(data => {
-      userId = data.userId;
       const idInfo = document.querySelector('#idInfo');
       idInfo.textContent = 'ID : ' + data.userId;
       const nicknameInfo = document.querySelector('#nickInfo');
@@ -25,7 +24,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 // 메인 페이지로 이동 버튼 클릭 시
 document.getElementById('MainPgBtn').addEventListener('click', function () {
-  window.location.href = 'loginMain.html'; // 메인 페이지로 이동
+  window.location.href = 'index.html'; // 메인 페이지로 이동
 });
 
 // 모달 창 열기
