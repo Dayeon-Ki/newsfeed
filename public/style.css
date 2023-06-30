@@ -81,3 +81,11 @@ main {
   display: flex;
   margin-bottom: 20px;
 }
+
+.userId {
+  color: white;
+}
+
+#writer {
+  display: flex;
+}

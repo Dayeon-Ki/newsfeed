@@ -13,10 +13,18 @@ window.addEventListener('DOMContentLoaded', function () {
 
       const postTitle = document.querySelector('.postTitle');
       postTitle.textContent = data.post.title;
-      const postWriter = document.querySelector('#writer p');
+      const postWriter = document.querySelector('.nickname');
       postWriter.textContent = data.post.user.nickname;
       const postContent = document.querySelector('.postContent');
       postContent.textContent = data.post.content;
+
+      const userId = document.querySelector('.userId');
+      userId.textContent = data.post.UserId;
+
+      // 게시글 작성자 누르면 userInfo 페이지로 가기
+      document.getElementById('writer').addEventListener('click', function () {
+        window.location.href = 'userInfo.html?id=' + userId.textContent;
+      });
 
       const likeCnt = document.querySelector('.likeCnt');
       likeCnt.textContent = data.post.likes.length;
@@ -250,5 +258,3 @@ document.getElementById('likeBtn').addEventListener('click', async function () {
     console.error('Error:', error);
   }
 });
-
-// 게시글 작성자 누르면 userInfo 페이지로 가기
