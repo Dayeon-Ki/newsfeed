@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const upload = require('../middlewares/uploader');
+const AWS = require('aws-sdk');
+require("dotenv").config();
 
 
 
@@ -195,10 +197,9 @@ router.put('/:userId', auth, async (req, res) => {
   res.status(201).json({ message: "회원정보가 수정되었습니다." });
 }
 );
-// 회원정보 사진 수정
-const AWS = require('aws-sdk');
-require("dotenv").config();
 
+
+// 회원정보 사진 수정
 
 const s3 = new AWS.S3({
   region: process.env.REGION,

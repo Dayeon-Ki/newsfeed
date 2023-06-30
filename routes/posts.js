@@ -5,6 +5,10 @@ const auth = require('../middlewares/auth');
 
 const { User, Post, Comment, Like } = require('../models');
 const { Op } = require('sequelize');
+const upload = require('../middlewares/uploader');
+const AWS = require('aws-sdk');
+require("dotenv").config();
+
 
 router.use('/:postId/comments', commentsRouter);
 
@@ -43,14 +47,62 @@ router.get('/', async (req, res) => {
     res.json({ message: '피드가 존재하지 않습니다.' });
   }
 });
+// 사진 업로드
+const s3 = new AWS.S3({
+  region: process.env.REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
 
 // 게시글 작성
-router.post('/', auth, (req, res) => {
+router.post('/', auth, upload.single('image'), async (req, res) => {
   const { title, content } = req.body;
-  UserId = res.locals.user.userId;
-  Post.create({ title, content, UserId });
+  const { userId } = res.locals.user;
+  // 사진 업로드된 경로 불러와서 함께 저장
+  const uploadimageUrl = req.file.location;
+  if (uploadimageUrl) { const img = uploadimageUrl }
+  else { const img = null }
+
+
+  Post.create({ title, content, userId, img });
   res.json({ message: '게시글을 생성하였습니다.' });
 });
+
+
+
+// router.post('/photo/:userId', auth, upload.single('image'), async (req, res) => {
+//   const userId = req.params.userId;
+//   const user = await User.findOne({ where: { userId: userId } });
+//   console.log(user.img)
+//   const decordURL = decodeURIComponent(user.img)
+//   const imgUrl = decordURL.substring(56,)
+//   console.log(imgUrl)
+//   if (user.img === null) {
+//     const uploadimageUrl = req.file.location;
+//     console.log(uploadimageUrl)
+//     await User.update({ img: uploadimageUrl }, {
+//       where: {
+//         userId: userId
+//       }
+//     })
+//   } else {
+//     s3.deleteObject({
+//       Bucket: process.env.BUCKET_NAME,
+//       Key: imgUrl
+//     }, (err, data) => {
+//       if (err) { throw err; }
+//       console.log('s3 deleteObject ', data)
+//     })
+//     const imageUrl = req.file.location;
+//     console.log(imageUrl)
+//     await User.update({ img: imageUrl }, {
+//       where: {
+//         userId: userId
+//       }
+//     })
+//   }
+//   res.status(201).json({ Message: "사진이 변경되었습니다." });
+// });
 
 // 특정 게시글 조회
 router.get('/:postId', auth, async (req, res) => {
