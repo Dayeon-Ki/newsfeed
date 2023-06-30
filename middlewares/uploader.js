@@ -18,6 +18,7 @@ const upload = multer({
     bucket: process.env.BUCKET_NAME,
     acl: "public-read",
     key: (req, file, cb) => {
+      file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8')
       const extension = path.extname(file.originalname)
       if (!allowedExtensions.includes(extension)) {
         return cb(new Error('wrong extension'))

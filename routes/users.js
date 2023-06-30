@@ -119,7 +119,8 @@ router.post('/:userId', auth, upload.single('image'), async (req, res) =>{
   const user = await User.findOne({ where: { userId: userId } });
   if (!user) return res.status(400).json({ errMessage: "존재하지 않는 사용자입니다." });
   console.log(user.img)
-  const imgUrl = user.img.substring(56,)
+  const decordURL = decodeURIComponent(user.img)
+  const imgUrl = decordURL.substring(56,)
   console.log(imgUrl)
   s3.deleteObject({
     Bucket : process.env.BUCKET_NAME,
