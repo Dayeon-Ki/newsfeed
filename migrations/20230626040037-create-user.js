@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       password: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
       },
       email: {
@@ -40,6 +40,12 @@ module.exports = {
       randomNumber: {
         type: Sequelize.STRING,
       },
+      snsId: {
+        type: Sequelize.STRING,
+      },
+      provider: {
+        type: Sequelize.STRING,
+      }
     });
   },
   async down(queryInterface, Sequelize) {

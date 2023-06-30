@@ -110,6 +110,7 @@ router.delete('/:postId', auth, async (req, res) => {
   }
 });
 
+
 // 게시글 좋아요 / 취소
 router.get('/:postId/like', auth, async (req, res) => {
   const { postId } = req.params;

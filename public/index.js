@@ -13,6 +13,7 @@ function closeModal(modalId) {
 // 로그인 버튼 클릭 시 로그인 모달 열기
 document.getElementById('loginBtn').addEventListener('click', function () {
   openModal('loginModal');
+
 });
 
 // 로그인 버튼 클릭 시 로그인 모달 열기
@@ -157,9 +158,28 @@ window.addEventListener("DOMContentLoaded", async function () {
                             </div>
                           </div>
                         </div>`;
-        cardBox.insertAdjacentHTML("beforeend", temp_html);
+        cardBox.insertAdjacentHTML('beforeend', temp_html);
       });
     });
+});
+
+
+window.Kakao.init('eee10d4b2a6b97065370b42717f9e358');
+
+document.getElementById('kakaoLoginBtn').addEventListener('click', function () {
+  window.Kakao.Auth.login({
+    scope: 'profile_nickname, account_email',
+    success: function (authObj) {
+      console.log(authObj);
+      window.Kakao.API.request({
+        url: '/v2/user/me',
+        success: function (res) {
+          const kakao_account = res.kakao_account;
+          console.log(kakao_account);
+        },
+      });
+    },
+  });
 });
 
 
@@ -167,3 +187,4 @@ const userInfo = (userId) => {
   window.location.href = `userInfo.html?id=${userId}`; // 메인 페이지로 이동
 
 }
+
