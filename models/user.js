@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         type: Sequelize.STRING,
       },
       password: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
       },
       email: {
@@ -58,6 +58,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       randomNumber: {
         type: DataTypes.STRING,
+      },
+      snsId: {
+        type: Sequelize.STRING,
+      },
+      provider: {
+        type: Sequelize.STRING,
       },
     },
     {
