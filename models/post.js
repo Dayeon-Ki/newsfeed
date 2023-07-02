@@ -43,9 +43,6 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
-    },
-    img: {
-      type: Sequelize.STRING
     }
   }, {
     sequelize,
