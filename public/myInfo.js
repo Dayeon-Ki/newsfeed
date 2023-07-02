@@ -6,9 +6,12 @@ window.addEventListener('DOMContentLoaded', function () {
   fetch('/api/users/currentUser', {}) // 유저정보 받아와서 뿌려주기
     .then(res => res.json())
     .then(data => {
+      console.log(data)
       const photo = document.querySelector('#profilePhoto');
-      const photoPath = `<img src='${data.user.img}'>`
-      photo.innerHTML = photoPath
+      if (data.user.img) {
+        const photoPath = `<img src='${data.user.img}'>`
+        photo.innerHTML = photoPath
+      }
       const idInfo = document.querySelector('#idInfo');
       idInfo.textContent = 'ID : ' + data.user.userId;
       const nicknameInfo = document.querySelector('#nickInfo');

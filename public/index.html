@@ -33,6 +33,21 @@
               <h5 class="modal-title">로그인</h5>
               <button type="button" class="btn-close" onclick="closeModal('loginModal')"></button>
             </div>
+
+            <!-- 패스포트 공식문서 로그인폼 -->
+            <h1>Sign in</h1>
+              <form action="/auth/login" method="post">
+                  <section>
+                      <label for="username">Username</label>
+                      <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+                  </section>
+                  <section>
+                      <label for="current-password">Password</label>
+                      <input id="current-password" name="password" type="password" autocomplete="current-password" required>
+                  </section>
+                  <button type="submit">Sign in</button>
+              </form>
+<!-- 폼 끝 -->
             <div class="modal-body">
               <input id="lgUserId" type="text" placeholder="userId" />
               <input id="lgPassword" type="password" placeholder="비밀번호" />

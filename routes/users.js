@@ -8,9 +8,11 @@ const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const upload = require('../middlewares/uploader');
 const AWS = require('aws-sdk');
+const passport = require('passport');
+
+const { isNotLoggedIn, isLoggedIn } = require('../middlewares');
+
 require("dotenv").config();
-
-
 
 // 회원가입
 router.post('/signup', async (req, res) => {
@@ -130,7 +132,7 @@ router.get('/logout', (req, res) => {
 
 
 // 쿠키받아와서 미들웨어에 디코딩, user정보 넘겨주기
-router.get("/currentUser", auth, async (req, res) => {
+router.get("/currentUser", isLoggedIn, async (req, res) => {
   const { userId } = res.locals.user;
   const user = await User.findOne({
     where: { userId: userId },

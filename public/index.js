@@ -36,7 +36,7 @@ document.getElementById("signupSubmit").addEventListener("click", async function
   const confirmPassword = document.getElementById("confirmPassword").value;
 
   try {
-    const response = await fetch("/api/users/signup", {
+    const response = await fetch("/auth/join", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,6 +86,7 @@ document.getElementById('loginSubmit').addEventListener('click', async function 
     });
 
     const data = await response.json();
+
     if (response.ok) {
       // 로그인 성공
       alert(data.message); // 알림 창 띄우기
@@ -133,6 +134,7 @@ document.getElementById('emailSubmit').addEventListener('click', async function 
     // 에러 처리 로직 수행
   }
 });
+
 
 // 피드 불러오기
 window.addEventListener("DOMContentLoaded", async function () {

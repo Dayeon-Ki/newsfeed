@@ -1,4 +1,5 @@
 const passport = require('passport');
+const local = require('./localStrategy');
 const kakao = require('./kakaoStrategy'); // 카카오서버로 로그인할때
 
 const { User } = require('../models');
@@ -14,7 +15,7 @@ module.exports = () => {
       User.findOne({ where: { userId: id } })
          .then(user => done(null, user))
          .catch(err => done(err));
-   }); 
-
+   });
+   local();
    kakao(); // 카카오 전략 등록
 };

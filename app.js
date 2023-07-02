@@ -18,6 +18,8 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(express.urlencoded({ extended: false }))
+
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
    session({
