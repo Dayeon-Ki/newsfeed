@@ -85,7 +85,7 @@ router.post('/', auth, async (req, res) => {
 //   const user = await User.findOne({ where: { userId: userId } });
 //   console.log(user.img)
 //   const decordURL = decodeURIComponent(user.img)
-//   const imgUrl = decordURL.substring(56,)
+//   const imgUrl = decordURL.substring(56,)rrr
 //   console.log(imgUrl)
 //   if (user.img === null) {
 //     const uploadimageUrl = req.file.location;
