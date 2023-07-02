@@ -103,7 +103,8 @@ uploadBtn.addEventListener("click", function () {
   })
     .then(res => res.json())
     .then((data) => {
-      alert(data)
+      alert(data.Message)
+      location.reload()
     })
 
 });

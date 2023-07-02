@@ -98,7 +98,7 @@ document.getElementById('modifySubmit').addEventListener('click', async function
   })
     .then(response => response.json())
     .then(data => {
-      alert('게시글이 수정되었습니다');
+      alert(data.message);
       location.reload();
     })
     .catch(error => {
@@ -112,14 +112,14 @@ document.getElementById('postDlBtn').addEventListener('click', async function ()
     const response = await fetch(`/api/posts/${postId}`, {
       method: 'DELETE',
     });
+    const data = await response.json();
     if (response.ok) {
-      const data = await response.json();
       // 삭제성공
       alert(data.message);
       window.location.href = 'loginMain.html';
     } else {
       // 삭제 실패
-      console.log('게시글 삭제에 실패했습니다.');
+      alert(data.message);
     }
   } catch (error) {
     console.log('오류가 발생했습니다.', error);
@@ -147,10 +147,8 @@ document.getElementById('commentCr').addEventListener('click', async function ()
     });
 
     const data = await response.json();
-    if (response.ok) {
-      alert(data.message);
-      location.reload();
-    }
+    alert(data.message)
+    location.reload()
   } catch (error) {
     console.error('Error:', error);
   }
@@ -184,6 +182,7 @@ document.addEventListener('click', async function (event) {
   if (event.target.id === 'editSubmit') {
     const commentId = event.target.closest('.solo-card').dataset.commentid;
     const editedContent = document.querySelector('#editContent').value;
+    console.log('댓글수정내용:', editedContent)
     try {
       const response = await fetch(`/api/posts/${postId}/comments/${commentId}`, {
         method: 'PUT',
@@ -192,14 +191,15 @@ document.addEventListener('click', async function (event) {
         },
         body: JSON.stringify({ content: editedContent }),
       });
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
         // 수정 성공
         alert(data.message);
         location.reload();
       } else {
         // 삭제 실패
-        console.log('댓글 수정에 실패했습니다.');
+        alert(data.message);
+        location.reload()
       }
     } catch (error) {
       console.log('오류가 발생했습니다.', error);
@@ -215,14 +215,14 @@ document.addEventListener('click', async function (event) {
       const response = await fetch(`/api/posts/${postId}/comments/${commentId}`, {
         method: 'DELETE',
       });
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
         // 삭제 성공
         alert(data.message);
         location.reload();
       } else {
         // 삭제 실패
-        console.log('댓글 삭제에 실패했습니다.');
+        alert(data.message);
       }
     } catch (error) {
       console.log('오류가 발생했습니다.', error);
@@ -245,7 +245,7 @@ document.getElementById('likeBtn').addEventListener('click', async function () {
       alert(data.message);
       location.reload();
     } else {
-      console.log(data.message);
+      alert(data.message)
     }
   } catch (error) {
     console.error('Error:', error);
