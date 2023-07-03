@@ -76,3 +76,16 @@ main {
   margin-right: 0;
   justify-content: end;
 }
+
+.like {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.userId {
+  color: white;
+}
+
+#writer {
+  display: flex;
+}

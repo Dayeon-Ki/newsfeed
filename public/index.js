@@ -13,6 +13,7 @@ function closeModal(modalId) {
 // 로그인 버튼 클릭 시 로그인 모달 열기
 document.getElementById('loginBtn').addEventListener('click', function () {
   openModal('loginModal');
+
 });
 
 // 로그인 버튼 클릭 시 로그인 모달 열기
@@ -122,7 +123,6 @@ document.getElementById('emailSubmit').addEventListener('click', async function 
     if (response.ok) {
       // 메일인증 성공
       alert(data.message); // 알림 창 띄우기
-      window.location.href = `myInfo.html?id=${userId}`; // 새로운 페이지로 이동
     } else {
       // 인증 실패
       alert(data.message);
@@ -157,13 +157,28 @@ window.addEventListener("DOMContentLoaded", async function () {
                             </div>
                           </div>
                         </div>`;
-        cardBox.insertAdjacentHTML("beforeend", temp_html);
+        cardBox.insertAdjacentHTML('beforeend', temp_html);
       });
     });
 });
 
 
-const userInfo = (userId) => {
-  window.location.href = `userInfo.html?id=${userId}`; // 메인 페이지로 이동
+window.Kakao.init('eee10d4b2a6b97065370b42717f9e358');
 
-}
+
+// 이거는 조금 더 공부해보기 위해 남겨둔 코드입니다.
+// document.getElementById('kakaoLogin').addEventListener('click', function () {
+//   window.Kakao.Auth.login({
+//     scope: 'profile_nickname, account_email',
+//     success: function (authObj) {
+//       console.log(authObj);
+//       window.Kakao.API.request({
+//         url: '/v2/user/me',
+//         success: function (res) {
+//           const kakao_account = res.kakao_account;
+//           console.log(kakao_account);
+//         },
+//       });
+//     },
+//   });
+// });

@@ -1,23 +1,19 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const commentsRouter = require("./comments");
-const auth = require("../middlewares/auth");
-
+const commentsRouter = require('./comments');
+const auth = require('../middlewares/auth');
 
 const { User, Post, Comment, Like } = require('../models');
 const { Op } = require('sequelize');
 
-router.use('/:postId/comments', commentsRouter)
+router.use('/:postId/comments', commentsRouter);
 
-
-
-// 전체 게시글 조회 
-router.get("/", async (req, res) => {
+// 전체 게시글 조회
+router.get('/', async (req, res) => {
   const posts = await Post.findAll({
     include: [
       {
         model: Comment,
-
         as: 'comments',
         include: [{ model: User, as: 'user', attributes: ['nickname'] }],
         attributes: ['commentId', 'content'],
@@ -28,11 +24,8 @@ router.get("/", async (req, res) => {
     order: [['createdAt', 'DESC']],
   });
 
-
   if (posts.length !== 0) {
     const results = posts.map(post => {
-      console.log(post);
-
       return {
         postId: post.postId,
         writer: post.user.nickname,
@@ -42,27 +35,34 @@ router.get("/", async (req, res) => {
         comments: post.comments,
       };
     });
-    res.status(200).json({ results })
+    res.status(200).json({ results });
   } else {
-    res.json({ message: "피드가 존재하지 않습니다." });
+    res.json({ message: '피드가 존재하지 않습니다.' });
   }
 });
 
+
 // 게시글 작성
-router.post("/", auth, (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { title, content } = req.body;
-  UserId = res.locals.user.userId;
+  const UserId = res.locals.user.userId;
   Post.create({ title, content, UserId });
-  res.json({ message: "게시글을 생성하였습니다." });
+  res.json({ message: '게시글을 생성하였습니다.' });
 });
 
 // 특정 게시글 조회
-router.get("/:postId", auth, async (req, res) => {
+router.get('/:postId', auth, async (req, res) => {
   const postId = req.params.postId;
   const post = await Post.findOne({
     where: { postId: postId },
     include: [
-      { model: Comment, as: 'comments', attributes: ['UserId', 'content'] },
+      {
+        model: Comment,
+
+        as: 'comments',
+        include: [{ model: User, as: 'user', attributes: ['nickname'] }],
+        attributes: ['commentId', 'UserId', 'content'],
+      },
       { model: Like, as: 'likes', attributes: ['userId'] },
       { model: User, as: 'user', attributes: ['nickname'] },
     ],
@@ -91,7 +91,6 @@ router.put('/:postId', auth, async (req, res) => {
   }
 });
 
-
 // 게시글 삭제
 router.delete('/:postId', auth, async (req, res) => {
   const { postId } = req.params;
@@ -110,12 +109,12 @@ router.delete('/:postId', auth, async (req, res) => {
   }
 });
 
+
 // 게시글 좋아요 / 취소
 router.get('/:postId/like', auth, async (req, res) => {
   const { postId } = req.params;
   const { userId } = res.locals.user;
   const like = await Like.findOne({
-
     where: { [Op.and]: [{ postId }, { userId }] },
   });
   if (like) {

@@ -6,6 +6,9 @@ const auth = require("../middlewares/auth");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
+const upload = require('../middlewares/uploader');
+const AWS = require('aws-sdk');
+require("dotenv").config();
 
 
 
@@ -60,9 +63,9 @@ router.post('/signup', async (req, res) => {
         nickname,
         email,
         password: encrypted,
-        password: encrypted,
         introduction,
         randomNumber: randomNumber.toString(),
+        img: null
       });
       res.status(201).json({
         message: '회원 가입에 성공하였습니다.',
@@ -128,8 +131,16 @@ router.get('/logout', (req, res) => {
 
 // 쿠키받아와서 미들웨어에 디코딩, user정보 넘겨주기
 router.get("/currentUser", auth, async (req, res) => {
-  const { userId, nickname, email, introduction, createdAt } = res.locals.user;
-  res.json({ userId, nickname, email, introduction, createdAt });
+  const { userId } = res.locals.user;
+  const user = await User.findOne({
+    where: { userId: userId },
+    include: [{
+      model: Follow, as: "followees" // userId가 followee인 경우를 조회(userId의 follower를 보기 위해)
+      , attributes: ["followerId"]
+    }],
+    attributes: ["userId", "nickname", "introduction", "img", 'createdAt']
+  })
+  res.json({ user });
 });
 
 // 회원정보 조회
@@ -141,7 +152,7 @@ router.get('/:userId', async (req, res) => {
       model: Follow, as: "followees" // userId가 followee인 경우를 조회(userId의 follower를 보기 위해)
       , attributes: ["followerId"]
     }],
-    attributes: ["userId", "nickname", "introduction"]
+    attributes: ["userId", "nickname", "introduction", "img"]
   })
   if (!user) return res.status(400).json({ message: "존재하지 않는 사용자입니다." });
   res.status(200).json({ user })
@@ -186,6 +197,46 @@ router.put('/:userId', auth, async (req, res) => {
   res.status(201).json({ message: "회원정보가 수정되었습니다." });
 }
 );
+
+
+// 회원정보 사진 수정
+
+const s3 = new AWS.S3({
+  region: process.env.REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+router.post('/photo/:userId', auth, upload.single('image'), async (req, res) => {
+  const userId = req.params.userId;
+  const user = await User.findOne({ where: { userId: userId } });
+  const decordURL = decodeURIComponent(user.img)
+  const imgUrl = decordURL.substring(56,)
+  if (user.img === null) {
+    const uploadimageUrl = req.file.location;
+    await User.update({ img: uploadimageUrl }, {
+      where: {
+        userId: userId
+      }
+    })
+  } else {
+    s3.deleteObject({
+      Bucket: process.env.BUCKET_NAME,
+      Key: imgUrl
+    }, (err, data) => {
+      if (err) { throw err; }
+    })
+    const imageUrl = req.file.location;
+    await User.update({ img: imageUrl }, {
+      where: {
+        userId: userId
+      }
+    })
+  }
+  res.status(201).json({ Message: "사진이 변경되었습니다." });
+});
+
+
 // 회원 삭제
 router.delete('/:userId', auth, async (req, res) => {
   const userId = req.params.userId;
