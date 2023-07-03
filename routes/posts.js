@@ -5,10 +5,6 @@ const auth = require('../middlewares/auth');
 
 const { User, Post, Comment, Like } = require('../models');
 const { Op } = require('sequelize');
-const upload = require('../middlewares/uploader');
-const AWS = require('aws-sdk');
-require("dotenv").config();
-
 
 router.use('/:postId/comments', commentsRouter);
 
@@ -44,27 +40,15 @@ router.get('/', async (req, res) => {
     res.json({ message: '피드가 존재하지 않습니다.' });
   }
 });
-// 사진 업로드
-const s3 = new AWS.S3({
-  region: process.env.REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-});
+
 
 // 게시글 작성
 router.post('/', auth, async (req, res) => {
   const { title, content } = req.body;
   const UserId = res.locals.user.userId;
-  // 사진 업로드된 경로 불러와서 함께 저장
-  // const uploadimageUrl = req.file.location;
-  // if (uploadimageUrl) { const img = uploadimageUrl }
-  // else { const img = null }
-
-
   Post.create({ title, content, UserId });
   res.json({ message: '게시글을 생성하였습니다.' });
 });
-
 
 // 특정 게시글 조회
 router.get('/:postId', auth, async (req, res) => {
