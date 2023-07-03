@@ -18,6 +18,7 @@ router.post('/', auth, (req, res) => {
 router.put('/:commentId', auth, async (req, res) => {
   const commentId = req.params.commentId;
   const content = req.body.content;
+  console.log('댓글내용', content)
   const { userId } = res.locals.user;
   const comment = await Comment.findOne({ where: { commentId } });
 

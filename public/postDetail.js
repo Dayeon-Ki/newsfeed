@@ -58,7 +58,8 @@ window.addEventListener('DOMContentLoaded', function () {
                               </div>
                             </div>
                           </div>
-                        </div>`;
+                        </div>
+                        `;
         commentBox.insertAdjacentHTML('beforeend', temp_html);
       });
     })
@@ -183,7 +184,7 @@ document.addEventListener('click', function (event) {
 document.addEventListener('click', async function (event) {
   if (event.target.id === 'editSubmit') {
     const commentId = event.target.closest('.solo-card').dataset.commentid;
-    const editedContent = document.querySelector('#editContent').value;
+    const editedContent = event.target.previousElementSibling.previousElementSibling.value;
     try {
       const response = await fetch(`/api/posts/${postId}/comments/${commentId}`, {
         method: 'PUT',
